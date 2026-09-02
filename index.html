@@ -1912,7 +1912,7 @@ function addCards(){
     const el=document.getElementById("ctetPaper"+p+"List"); if(!el)return;
     if(el.querySelector(".ctet-pyq150-card"))return;
     const card=document.createElement("div"); card.className="ctet-pyq150-card";
-    card.innerHTML='<div><h3>📚 CTET Paper '+p+' — PYQ Full Test</h3><p>PYQ-pattern practice • 150 Questions • 150 Marks • 150 Minutes</p><div class="ctet-pyq150-meta">English + Hindi • Previous / Save & Next • Question Palette • Pause / Resume • Review Answers</div></div><button class="ctet-pyq150-btn" type="button">🚀 Preview / Start PYQ</button>';
+    card.innerHTML='<div><span class="mode-badge">📚 FULL TEST</span><h3>🎓 CTET Paper '+p+' — Full Test</h3><p>150 Questions • 150 Marks • 150 Minutes</p><div class="ctet-pyq150-meta">English + Hindi • Previous / Save & Next • Question Palette • Pause / Resume • Detailed Answer Review</div></div><button class="ctet-pyq150-btn" type="button">🚀 Start Full Test</button>';
     card.querySelector("button").onclick=()=>openCTETPYQ150(p);
     el.appendChild(card);
   });

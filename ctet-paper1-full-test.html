@@ -1,41 +1,171 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CTET Paper 1 — Full Test | ExamBook Pro</title>
-<style>
-body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#172033}.wrap{max-width:1000px;margin:auto;padding:20px}.top{position:sticky;top:0;background:#fff;padding:14px;border-radius:14px;box-shadow:0 4px 18px #0001;z-index:5}.row{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}.timer{font-size:22px;font-weight:800;color:#dc2626}.card{background:#fff;margin-top:18px;padding:22px;border-radius:16px;box-shadow:0 5px 20px #0001}.opt{display:block;padding:13px;border:1px solid #ddd;border-radius:10px;margin:10px 0;cursor:pointer}.opt:hover{background:#f1f5ff}.actions{display:flex;gap:10px;margin-top:18px}.btn{border:0;border-radius:9px;padding:11px 16px;background:#2563eb;color:white;font-weight:700;cursor:pointer}.secondary{background:#475569}.palette{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-top:12px}.p{padding:8px 3px;border:1px solid #ddd;background:#fff;border-radius:7px;cursor:pointer}.answered{background:#dcfce7}.current{outline:3px solid #93c5fd}.hidden{display:none}.result{font-size:24px;font-weight:800}.muted{color:#64748b}@media(max-width:600px){.palette{grid-template-columns:repeat(5,1fr)}}
-</style></head>
-<body><div class="wrap">
-<div class="top"><div class="row"><div><b>CTET Paper 1 — Full Test</b><div class="muted">150 Questions • 150 Marks • 150 Minutes</div></div><div class="timer" id="timer">150:00</div></div></div>
-<div id="intro" class="card"><h2>CTET Paper 1 Full Test</h2><p>This is an original practice test, not an official CTET question paper.</p><ul><li>150 questions</li><li>150 marks</li><li>150 minutes</li><li>No negative marking</li></ul><button class="btn" onclick="startTest()">Start Full Test</button></div>
-<div id="exam" class="hidden"><div class="card"><div class="muted" id="count"></div><h2 id="qtext"></h2><div id="opts"></div><div class="actions"><button class="btn secondary" onclick="prevQ()">Previous</button><button class="btn" onclick="saveNext()">Save & Next</button></div></div><div class="card"><b>Question Palette</b><div class="palette" id="palette"></div></div></div>
-<div id="result" class="card hidden"></div>
-</div>
+<!doctype html><html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>CTET Paper 1 Full Test | ExamBook Pro</title><style>*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}.top{position:sticky;top:0;z-index:5;background:linear-gradient(120deg,#312e81,#2563eb);color:#fff;padding:13px 18px}.bar{max-width:1400px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:12px}.title{font-weight:800;font-size:20px}.timer{background:#fff;color:#111827;border-radius:8px;padding:9px 14px;font-weight:900}.layout{max-width:1400px;margin:auto;padding:16px;display:grid;grid-template-columns:1fr 320px;gap:16px}.card{background:#fff;border:1px solid #dbe3ef;border-radius:14px;padding:18px;box-shadow:0 4px 18px #0000000a}.sectionTabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tab{border:1px solid #2563eb;background:#fff;color:#1d4ed8;padding:9px 11px;border-radius:8px;font-weight:700;cursor:pointer}.tab.active{background:#2563eb;color:#fff}.sub{font-size:12px;font-weight:400}.tools{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}.select{padding:9px;border:1px solid #cbd5e1;border-radius:8px}.section{background:#eef2ff;padding:10px;border-radius:8px;color:#3730a3;font-weight:800;margin:12px 0}.qno{color:#64748b;font-weight:700}.q{font-size:20px;line-height:1.6;margin:12px 0 18px}.opt{display:block;border:1px solid #dbe3ef;padding:12px;margin:9px 0;border-radius:9px;cursor:pointer}.opt:hover{background:#f8fafc}.opt input{margin-right:9px}.actions{display:flex;justify-content:space-between;gap:10px;margin-top:18px}.btn{border:0;border-radius:8px;padding:11px 16px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}.gray{background:#64748b}.red{background:#dc2626;width:100%;margin-top:15px}.legend{font-size:13px;color:#64748b}.palette{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:10px}.p{height:36px;border:1px solid #94a3b8;background:#fff;border-radius:6px;cursor:pointer}.p.current{background:#2563eb;color:#fff}.p.answered{background:#16a34a;color:#fff}.result{display:none;max-width:700px;margin:30px auto;text-align:center}.score{font-size:42px;font-weight:900;color:#2563eb}.muted{color:#64748b;font-size:13px}@media(max-width:900px){.layout{grid-template-columns:1fr}.side{order:-1}.q{font-size:18px}}
+</style></head><body><header class="top"><div class="bar"><div class="title">🎓 CTET Paper 1 — Full Test</div><div class="timer">⏱️ <span id="timer">150:00</span></div></div></header><div class="layout" id="layout"><main class="card"><div class="tools"><div><b>150 Questions • 150 Marks • 150 Minutes</b><div class="muted">CDP 30 + Mathematics 30 + EVS 30 + Hindi 30 + English 30 • No Negative Marking</div></div><select id="lang" class="select" onchange="render()"><option value="hi">Hindi</option><option value="en">English</option><option value="both">English + Hindi</option></select></div><div id="tabs" class="sectionTabs"></div><div id="question"></div><div class="actions"><button class="btn gray" onclick="prevQ()">← Previous</button><button class="btn" onclick="nextQ()">Save & Next →</button></div></main><aside class="card side"><h3>📋 Question Palette</h3><div class="legend">🟢 Answered &nbsp; 🔵 Current &nbsp; ⚪ Not Answered</div><div id="palette"></div><button class="btn red" onclick="submitTest()">Submit Test</button></aside></div><section id="result" class="card result"></section>
 <script>
-const subjects=['Child Development & Pedagogy','Mathematics','Environmental Studies','Language I','Language II'];
-const templates=[
-['Which approach best supports child-centred learning?',['Rote memorisation','Active participation and exploration','Only lectures','Punishment'],1],
-['Formative assessment is mainly used to:',['Rank students','Improve learning during instruction','Replace teaching','Award certificates'],1],
-['A teacher should address individual differences by:',['Using one method for everyone','Providing varied learning opportunities','Ignoring differences','Only testing memory'],1],
-['The place value of 7 in 57,324 is:',['7','70','700','7000'],1],
-['Which number is prime?',['21','29','33','39'],1],
-['2/5 expressed as a decimal is:',['0.2','0.4','0.5','2.5'],1],
-['Plants prepare food mainly through:',['Respiration','Photosynthesis','Digestion','Transpiration'],1],
-['Which is a renewable source of energy?',['Coal','Petroleum','Solar energy','Natural gas'],2],
-['The main purpose of a library in a school is to:',['Store furniture','Support reading and learning','Conduct exams only','Keep attendance'],1],
-['Which activity best develops speaking skills?',['Silent copying','Group discussion','Only handwriting','Memorising spellings'],1]
-];
-let qs=[];for(let i=0;i<150;i++){let t=templates[i%templates.length];qs.push({q:(i+1)+'. '+t[0],o:t[1],a:t[2]});}
-let idx=0,ans=Array(150).fill(null),running=false,endAt=0;
-function startTest(){document.getElementById('intro').classList.add('hidden');document.getElementById('exam').classList.remove('hidden');running=true;endAt=Date.now()+150*60*1000;renderPalette();renderQ();tick();}
-function renderQ(){let x=qs[idx];document.getElementById('count').textContent='Question '+(idx+1)+' of 150';document.getElementById('qtext').textContent=x.q;document.getElementById('opts').innerHTML=x.o.map((o,j)=>`<label class="opt"><input type="radio" name="ans" ${ans[idx]===j?'checked':''} onchange="choose(${j})"> ${String.fromCharCode(65+j)}. ${o}</label>`).join('');document.querySelectorAll('.p').forEach((b,i)=>b.className='p '+(ans[i]!==null?'answered ':'')+(i===idx?'current':''));}
-function renderPalette(){document.getElementById('palette').innerHTML=qs.map((_,i)=>`<button class="p" onclick="gotoQ(${i})">${i+1}</button>`).join('');}
-function choose(v){ans[idx]=v;renderPalette();document.querySelectorAll('.p')[idx].classList.add('current');}
-function gotoQ(i){idx=i;renderQ();}
-function prevQ(){if(idx>0){idx--;renderQ();}}
-function saveNext(){if(idx<149){idx++;renderQ();}else submitTest();}
-function tick(){if(!running)return;let s=Math.max(0,Math.ceil((endAt-Date.now())/1000));let m=Math.floor(s/60),sec=s%60;document.getElementById('timer').textContent=String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');if(s<=0){submitTest();return;}setTimeout(tick,500);}
-function submitTest(){if(!running)return;running=false;let correct=ans.reduce((n,v,i)=>n+(v===qs[i].a?1:0),0),attempt=ans.filter(v=>v!==null).length,wrong=attempt-correct,pct=(correct/150*100).toFixed(2);document.getElementById('exam').classList.add('hidden');let r=document.getElementById('result');r.classList.remove('hidden');r.innerHTML=`<div class="result">Test Submitted</div><p><b>Score:</b> ${correct}/150</p><p><b>Percentage:</b> ${pct}%</p><p><b>Attempted:</b> ${attempt} &nbsp; <b>Correct:</b> ${correct} &nbsp; <b>Wrong:</b> ${wrong} &nbsp; <b>Unattempted:</b> ${150-attempt}</p><button class="btn" onclick="location.reload()">Retake Test</button>`;}
+const S=[['CDP','बाल विकास एवं शिक्षाशास्त्र'],['Mathematics','गणित'],['EVS','पर्यावरण अध्ययन'],['Hindi','हिंदी'],['English','अंग्रेजी']];
+const A=[];const add=(s,hi,en,oh,oe,a)=>A.push({s,hi,en,oh,oe,a});
+// CDP 30
+add('CDP','बाल-केंद्रित शिक्षा में शिक्षक की प्रमुख भूमिका क्या है?','In child-centred education, what is the main role of the teacher?',['सुविधादाता','तानाशाह','केवल परीक्षक','केवल व्याख्याता'],['Facilitator','Dictator','Only examiner','Only lecturer'],0);
+add('CDP','पियाजे की ठोस संक्रियात्मक अवस्था लगभग किस आयु की है?','Piaget’s concrete operational stage is approximately which age?',['7–11 वर्ष','2–7 वर्ष','11–15 वर्ष','जन्म–2 वर्ष'],['7–11 years','2–7 years','11–15 years','Birth–2 years'],0);
+add('CDP','विगोत्स्की का ZPD किससे संबंधित है?','Vygotsky’s ZPD is related to:',['वर्तमान और संभावित प्रदर्शन का अंतर','केवल IQ','शारीरिक वृद्धि','परीक्षा अंक'],['Gap between actual and potential performance','Only IQ','Physical growth','Exam marks'],0);
+add('CDP','समावेशी शिक्षा का उद्देश्य क्या है?','What is the aim of inclusive education?',['सभी बच्चों को साथ सीखने का अवसर','कमजोर बच्चों को अलग करना','केवल प्रतिभाशाली बच्चों को पढ़ाना','केवल परीक्षा परिणाम बढ़ाना'],['Give all children opportunities to learn together','Separate weak children','Teach only gifted children','Only increase exam results'],0);
+add('CDP','रचनात्मक आकलन कब किया जाता है?','When is formative assessment conducted?',['सीखने के दौरान','केवल वर्ष के अंत में','प्रवेश से पहले','केवल परिणाम के बाद'],['During learning','Only at year end','Before admission','Only after results'],0);
+add('CDP','बच्चे की गलती को शिक्षक को कैसे देखना चाहिए?','How should a teacher view a child’s error?',['सीखने की उपयोगी सूचना','अपराध','आलस्य का प्रमाण','अंतिम असफलता'],['Useful information about learning','A crime','Proof of laziness','Final failure'],0);
+add('CDP','बहु-बुद्धि सिद्धांत किसने दिया?','Who proposed the theory of multiple intelligences?',['हावर्ड गार्डनर','पियाजे','स्किनर','फ्रायड'],['Howard Gardner','Piaget','Skinner','Freud'],0);
+add('CDP','आंतरिक प्रेरणा का उदाहरण क्या है?','Which is an example of intrinsic motivation?',['रुचि के कारण सीखना','इनाम के लिए सीखना','डर से सीखना','दंड से बचना'],['Learning due to interest','Learning for reward','Learning due to fear','Avoiding punishment'],0);
+add('CDP','स्कैफोल्डिंग का अर्थ क्या है?','What does scaffolding mean?',['अस्थायी सीखने की सहायता','दंड देना','सारा काम शिक्षक करना','परीक्षा हटाना'],['Temporary learning support','Punishing','Teacher doing all work','Removing exams'],0);
+add('CDP','सहकारी अधिगम की मुख्य विशेषता क्या है?','A key feature of cooperative learning is:',['साझा लक्ष्य और सहभागिता','पूर्ण अलगाव','केवल प्रतिस्पर्धा','मौन'],['Shared goals and participation','Complete isolation','Only competition','Silence'],0);
+add('CDP','व्यक्तिगत भिन्नताओं का अर्थ क्या है?','What do individual differences mean?',['क्षमताओं, रुचियों और गति में अंतर','सभी बच्चों की समानता','केवल कद में अंतर','केवल अंक में अंतर'],['Differences in abilities, interests and pace','All children being identical','Only height differences','Only score differences'],0);
+add('CDP','रचनावादी दृष्टिकोण में बच्चा कैसा होता है?','In constructivism, the learner is:',['सक्रिय ज्ञान-निर्माता','निष्क्रिय श्रोता','केवल नकलकर्ता','केवल परीक्षार्थी'],['An active constructor of knowledge','A passive listener','Only a copier','Only an examinee'],0);
+add('CDP','लैंगिक रूढ़ियों से बचने के लिए क्या करना चाहिए?','To avoid gender stereotypes, a teacher should:',['समान अवसर देना','लड़कियों को सीमित करना','लड़कों को ही नेतृत्व देना','रुचियाँ पहले से तय करना'],['Provide equal opportunities','Limit girls','Give leadership only to boys','Predetermine interests'],0);
+add('CDP','पोर्टफोलियो क्या दिखा सकता है?','What can a portfolio show?',['समय के साथ विद्यार्थी के कार्य और प्रगति','केवल एक परीक्षा','केवल उपस्थिति','केवल फीस'],['Learner’s work and progress over time','Only one exam','Only attendance','Only fees'],0);
+add('CDP','सकारात्मक अनुशासन का अर्थ है—','Positive discipline means:',['सम्मान और स्पष्ट सीमाएँ','हर गलती पर दंड','भय पैदा करना','बच्चों को चुप रखना'],['Respect and clear limits','Punishment for every error','Creating fear','Keeping children silent'],0);
+add('CDP','डिस्लेक्सिया मुख्यतः किस कठिनाई से जुड़ा है?','Dyslexia is mainly associated with difficulty in:',['पढ़ने','चलने','सुनने','देखने'],['Reading','Walking','Hearing','Seeing'],0);
+add('CDP','सहपाठी अधिगम में क्या होता है?','What happens in peer learning?',['बच्चे एक-दूसरे से सीखते हैं','केवल शिक्षक बोलता है','कोई संवाद नहीं होता','केवल परीक्षा होती है'],['Children learn from one another','Only teacher speaks','No interaction','Only exams occur'],0);
+add('CDP','पूर्व ज्ञान जानना क्यों उपयोगी है?','Why is prior knowledge useful to identify?',['नई सीख को पुराने ज्ञान से जोड़ने के लिए','केवल रैंक बनाने के लिए','पाठ हटाने के लिए','समय नष्ट करने के लिए'],['To connect new learning with prior knowledge','Only to rank','To remove lessons','To waste time'],0);
+add('CDP','अच्छे प्रश्नों का प्रमुख उद्देश्य क्या हो सकता है?','A major purpose of good questions is to:',['सोच को बढ़ावा देना','डर पैदा करना','केवल समय भरना','केवल उपस्थिति लेना'],['Promote thinking','Create fear','Only fill time','Only take attendance'],0);
+add('CDP','सीखने में विविधता को शिक्षक को कैसे देखना चाहिए?','How should a teacher view diversity in learning?',['संसाधन और अवसर के रूप में','सिर्फ समस्या','बाधा','अनदेखी करने योग्य'],['As a resource and opportunity','Only as a problem','As an obstacle','As something to ignore'],0);
+add('CDP','नैतिक विकास के चरणों से कौन जुड़ा है?','Who is associated with stages of moral development?',['कोहलबर्ग','न्यूटन','डार्विन','पाश्चर'],['Kohlberg','Newton','Darwin','Pasteur'],0);
+add('CDP','मूल्यांकन की विश्वसनीयता का अर्थ है—','Reliability in assessment means:',['परिणामों की स्थिरता','प्रश्नों की लंबाई','सुंदर लिखावट','अधिक अंक'],['Consistency of results','Length of questions','Good handwriting','Higher marks'],0);
+add('CDP','समस्या-समाधान गतिविधियाँ किसे बढ़ाती हैं?','Problem-solving activities develop:',['उच्च-स्तरीय चिंतन','केवल नकल','केवल लिखावट','केवल उपस्थिति'],['Higher-order thinking','Only copying','Only handwriting','Only attendance'],0);
+add('CDP','बच्चे को अतिरिक्त सहायता कब देनी चाहिए?','When should a child receive additional support?',['जब सीखने में आवश्यकता हो','कभी नहीं','केवल दंड के बाद','केवल परीक्षा के बाद'],['When learning needs it','Never','Only after punishment','Only after exams'],0);
+add('CDP','बाल विकास कैसा है?','Child development is:',['बहुआयामी और क्रमिक','केवल शारीरिक','हर बच्चे में समान गति का','केवल जन्म तक सीमित'],['Multidimensional and progressive','Only physical','Same pace for every child','Limited to birth'],0);
+add('CDP','अच्छी कक्षा चर्चा में क्या महत्वपूर्ण है?','What is important in a good classroom discussion?',['सुनना, तर्क और सहभागिता','केवल शिक्षक का बोलना','मौन','केवल याद करना'],['Listening, reasoning and participation','Only teacher talking','Silence','Only memorisation'],0);
+add('CDP','अभिक्षमता मुख्यतः किससे जुड़ी है?','Aptitude is mainly related to:',['संभावित क्षमता','केवल वर्तमान अंक','केवल उपस्थिति','केवल उम्र'],['Potential ability','Only current marks','Only attendance','Only age'],0);
+add('CDP','बाल-केंद्रित कक्षा में सीखना कैसा होता है?','Learning in a child-centred classroom is:',['सक्रिय और अनुभव आधारित','केवल व्याख्यान आधारित','केवल रटने वाला','केवल परीक्षा आधारित'],['Active and experience-based','Only lecture-based','Only rote-based','Only exam-based'],0);
+add('CDP','समानता और न्याय में शिक्षक को क्या करना चाहिए?','For equity in class, a teacher should:',['आवश्यकतानुसार अलग सहायता देना','सबको हमेशा बिल्कुल एक ही सहायता देना','कमजोर बच्चों को हटाना','केवल तेज बच्चों को पढ़ाना'],['Give support according to need','Always give exactly the same support','Remove weak children','Teach only fast learners'],0);
+add('CDP','आकलन का सर्वोत्तम उपयोग क्या है?','One of the best uses of assessment is to:',['शिक्षण और सीखने में सुधार करना','केवल रैंक बनाना','बच्चों को लेबल करना','दंड देना'],['Improve teaching and learning','Only rank students','Label children','Punish'],0);
+add('CDP','सहायता धीरे-धीरे हटाना किससे जुड़ा है?','Gradually withdrawing support is related to:',['Scaffolding','Ranking','Labelling','Punishment'],['Scaffolding','Ranking','Labelling','Punishment'],0);
+// Mathematics 30
+add('Mathematics','48 और 72 का HCF क्या है?','What is the HCF of 48 and 72?',['12','18','24','36'],['12','18','24','36'],2);
+add('Mathematics','3/4 + 2/3 = ?','3/4 + 2/3 = ?',['17/12','13/12','5/7','7/12'],['17/12','13/12','5/7','7/12'],0);
+add('Mathematics','0.75 को भिन्न में लिखें।','Express 0.75 as a fraction.',['1/2','2/3','3/4','4/5'],['1/2','2/3','3/4','4/5'],2);
+add('Mathematics','8 सेमी भुजा वाले वर्ग का क्षेत्रफल क्या है?','Area of a square with side 8 cm?',['16 cm²','32 cm²','64 cm²','128 cm²'],['16 cm²','32 cm²','64 cm²','128 cm²'],2);
+add('Mathematics','त्रिभुज के कोणों का योग कितना है?','Sum of angles of a triangle?',['90°','180°','270°','360°'],['90°','180°','270°','360°'],1);
+add('Mathematics','5 पेन ₹60 के हैं। 1 पेन की कीमत?','5 pens cost ₹60. Cost of 1 pen?',['₹10','₹12','₹15','₹20'],['₹10','₹12','₹15','₹20'],1);
+add('Mathematics','25% को दशमलव में लिखें।','Express 25% as a decimal.',['0.025','0.25','2.5','25'],['0.025','0.25','2.5','25'],1);
+add('Mathematics','12 cm × 5 cm आयत का परिमाप?','Perimeter of a 12 cm × 5 cm rectangle?',['17 cm','34 cm','60 cm','24 cm'],['17 cm','34 cm','60 cm','24 cm'],1);
+add('Mathematics','2, 4, 8, 16, अगली संख्या?','2, 4, 8, 16, next number?',['20','24','32','36'],['20','24','32','36'],2);
+add('Mathematics','1 किलोमीटर में कितने मीटर?','How many metres in 1 kilometre?',['10','100','1000','10000'],['10','100','1000','10000'],2);
+add('Mathematics','x + 7 = 15, x = ?','If x + 7 = 15, x = ?',['6','7','8','9'],['6','7','8','9'],2);
+add('Mathematics','घन के कितने फलक होते हैं?','How many faces does a cube have?',['4','6','8','12'],['4','6','8','12'],1);
+add('Mathematics','5² = ?','5² = ?',['10','15','20','25'],['10','15','20','25'],3);
+add('Mathematics','एक दर्जन में कितनी वस्तुएँ?','How many items are in a dozen?',['10','12','20','24'],['10','12','20','24'],1);
+add('Mathematics','7/8 में अंश कौन है?','What is the numerator in 7/8?',['7','8','15','1'],['7','8','15','1'],0);
+add('Mathematics','₹500 पर 10% छूट के बाद कीमत?','Price after 10% discount on ₹500?',['₹450','₹460','₹490','₹550'],['₹450','₹460','₹490','₹550'],0);
+add('Mathematics','6, 8, 10 का औसत?','Average of 6, 8, 10?',['6','7','8','9'],['6','7','8','9'],2);
+add('Mathematics','समांतर रेखाएँ कैसी होती हैं?','Parallel lines:',['कभी नहीं काटतीं','हमेशा काटती हैं','हमेशा लंबवत होती हैं','केवल वृत्त में होती हैं'],['Never intersect','Always intersect','Always perpendicular','Only occur in circles'],0);
+add('Mathematics','2.5 × 4 = ?','2.5 × 4 = ?',['5','8','10','12'],['5','8','10','12'],2);
+add('Mathematics','144 का वर्गमूल?','Square root of 144?',['10','11','12','14'],['10','11','12','14'],2);
+add('Mathematics','1 घंटे में कितने मिनट?','How many minutes in 1 hour?',['30','45','60','100'],['30','45','60','100'],2);
+add('Mathematics','3:5 में कुल 40 हो तो पहला भाग?','In ratio 3:5, total 40; first part?',['12','15','20','25'],['12','15','20','25'],0);
+add('Mathematics','त्रिज्या 7 cm के वृत्त का व्यास?','Diameter of a circle with radius 7 cm?',['7 cm','14 cm','21 cm','28 cm'],['7 cm','14 cm','21 cm','28 cm'],1);
+add('Mathematics','15 का 20%?','20% of 15?',['2','3','4','5'],['2','3','4','5'],1);
+add('Mathematics','1/2 और 2/3 में बड़ी भिन्न?','Which is larger, 1/2 or 2/3?',['1/2','2/3','दोनों बराबर','निश्चित नहीं'],['1/2','2/3','Both equal','Cannot say'],1);
+add('Mathematics','किसी संख्या का 1/4 = 9 है। संख्या?','One-fourth of a number is 9. Number?',['18','27','36','45'],['18','27','36','45'],2);
+add('Mathematics','3 बजे मिनट की सुई कहाँ होती है?','At 3 o’clock, where is the minute hand?',['3','6','9','12'],['3','6','9','12'],3);
+add('Mathematics','5,10,15,20 में पैटर्न?','Pattern in 5,10,15,20?',['+2','+5','×2','−5'],['+2','+5','×2','−5'],1);
+add('Mathematics','1 लीटर में कितने मिलीलीटर?','How many millilitres in 1 litre?',['100','500','1000','1500'],['100','500','1000','1500'],2);
+add('Mathematics','गणित में ठोस वस्तुओं का उपयोग क्यों?','Why use concrete objects in mathematics?',['अमूर्त विचारों को अनुभव से जोड़ने के लिए','केवल सजावट के लिए','प्रश्न हटाने के लिए','उत्तर पहले बताने के लिए'],['To connect abstract ideas with experience','Only for decoration','To remove questions','To give answers beforehand'],0);
+// EVS 30
+add('EVS','पौधे भोजन किस प्रक्रिया से बनाते हैं?','Plants make food through:',['प्रकाश संश्लेषण','श्वसन','वाष्पीकरण','अंकुरण'],['Photosynthesis','Respiration','Evaporation','Germination'],0);
+add('EVS','सामान्य वायुदाब पर पानी का उबलांक?','Boiling point of water at normal pressure?',['0°C','50°C','100°C','212°C'],['0°C','50°C','100°C','212°C'],2);
+add('EVS','विटामिन C का अच्छा स्रोत?','A good source of vitamin C?',['नींबू','चावल','तेल','नमक'],['Lemon','Rice','Oil','Salt'],0);
+add('EVS','जल संरक्षण का उपाय?','A way to conserve water?',['वर्षा जल संचयन','नल खुला छोड़ना','पानी बहाना','नदी में कचरा डालना'],['Rainwater harvesting','Leaving taps open','Wasting water','Dumping waste in rivers'],0);
+add('EVS','वायु में सर्वाधिक गैस?','Most abundant gas in air?',['ऑक्सीजन','नाइट्रोजन','CO₂','हाइड्रोजन'],['Oxygen','Nitrogen','CO₂','Hydrogen'],1);
+add('EVS','मधुमक्खियाँ शहद मुख्यतः किससे बनाती हैं?','Bees mainly make honey from:',['फूलों का रस','मिट्टी','पत्तियों की धूल','पत्थर'],['Flower nectar','Soil','Leaf dust','Stone'],0);
+add('EVS','संतुलित आहार में क्या होता है?','A balanced diet contains:',['विभिन्न पोषक तत्व उचित मात्रा में','केवल मिठाई','केवल चावल','केवल वसा'],['Different nutrients in proper amounts','Only sweets','Only rice','Only fat'],0);
+add('EVS','पृथ्वी का प्राकृतिक उपग्रह?','Earth’s natural satellite?',['सूर्य','चंद्रमा','मंगल','शुक्र'],['Sun','Moon','Mars','Venus'],1);
+add('EVS','कचरा अलग करने का लाभ?','Benefit of waste segregation?',['पुनर्चक्रण आसान होता है','कचरा बढ़ता है','पानी गंदा होता है','ऊर्जा खत्म होती है'],['Recycling becomes easier','Waste increases','Water becomes dirty','Energy ends'],0);
+add('EVS','मच्छर से फैलने वाला रोग?','A disease spread by mosquitoes?',['मलेरिया','स्कर्वी','रिकेट्स','एनीमिया'],['Malaria','Scurvy','Rickets','Anaemia'],0);
+add('EVS','पौधों में जल का परिवहन किससे?','Water transport in plants occurs mainly through:',['जाइलम','फ्लोएम','बीज','छाल'],['Xylem','Phloem','Seed','Bark'],0);
+add('EVS','सूर्य किस दिशा में अस्त होता है?','The Sun sets in the:',['पूर्व','पश्चिम','उत्तर','दक्षिण'],['East','West','North','South'],1);
+add('EVS','मिट्टी की ऊपरी उपजाऊ परत?','Upper fertile layer of soil?',['ऊपरी मृदा','चट्टान','जलमंडल','वायुमंडल'],['Topsoil','Rock','Hydrosphere','Atmosphere'],0);
+add('EVS','नवीकरणीय ऊर्जा स्रोत?','A renewable energy source?',['सौर ऊर्जा','कोयला','पेट्रोलियम','प्राकृतिक गैस'],['Solar energy','Coal','Petroleum','Natural gas'],0);
+add('EVS','रक्त पंप करने वाला अंग?','Organ that pumps blood?',['हृदय','फेफड़ा','यकृत','गुर्दा'],['Heart','Lung','Liver','Kidney'],0);
+add('EVS','फेफड़ों का मुख्य कार्य?','Main function of lungs?',['गैसों का आदान-प्रदान','भोजन पचाना','रक्त बनाना','हड्डी बनाना'],['Exchange of gases','Digest food','Make blood','Make bones'],0);
+add('EVS','वनों की कटाई का प्रभाव?','An effect of deforestation?',['जैव विविधता में कमी','हमेशा वर्षा बढ़ना','मृदा हमेशा सुधरना','प्रदूषण खत्म होना'],['Loss of biodiversity','Rainfall always increases','Soil always improves','Pollution ends'],0);
+add('EVS','पक्षी की चोंच किससे संबंधित हो सकती है?','A bird’s beak shape may be related to:',['भोजन और आहार','केवल रंग','केवल उम्र','केवल उड़ान की ऊँचाई'],['Food and diet','Only colour','Only age','Only flying height'],0);
+add('EVS','कम्पोस्ट किससे बन सकता है?','Compost can be made from:',['जैविक कचरा','काँच','धातु','प्लास्टिक'],['Organic waste','Glass','Metal','Plastic'],0);
+add('EVS','स्वच्छ पेयजल क्यों आवश्यक है?','Why is clean drinking water necessary?',['जलजनित रोगों से बचाव','केवल स्वाद','केवल खेती','केवल सफाई'],['To prevent water-borne diseases','Only for taste','Only for farming','Only for cleaning'],0);
+add('EVS','पौधों में भोजन का परिवहन किससे?','Food transport in plants mainly occurs through:',['फ्लोएम','जाइलम','जड़ रोम','बीज'],['Phloem','Xylem','Root hairs','Seed'],0);
+add('EVS','जीव और अजैव घटक मिलकर क्या बनाते हैं?','Living and non-living components together form:',['पारितंत्र','केवल जल','केवल मृदा','केवल वायु'],['Ecosystem','Only water','Only soil','Only air'],0);
+add('EVS','जैव अपघटनीय पदार्थ?','A biodegradable material?',['सब्जियों के छिलके','प्लास्टिक बोतल','काँच','एल्युमिनियम'],['Vegetable peels','Plastic bottle','Glass','Aluminium'],0);
+add('EVS','पृथ्वी के चारों ओर गैसों की परत?','Layer of gases around Earth?',['वायुमंडल','जलमंडल','स्थलमंडल','जीवमंडल'],['Atmosphere','Hydrosphere','Lithosphere','Biosphere'],0);
+add('EVS','टीकाकरण का उद्देश्य?','Purpose of vaccination?',['प्रतिरक्षा विकसित करना','भूख बढ़ाना','ऊँचाई बढ़ाना','नींद बढ़ाना'],['Develop immunity','Increase hunger','Increase height','Increase sleep'],0);
+add('EVS','सूर्य से मिलने वाली ऊर्जा?','Energy received from the Sun?',['प्रकाश और ऊष्मा','ध्वनि','केवल विद्युत','केवल गति'],['Light and heat','Sound','Only electricity','Only motion'],0);
+add('EVS','EVS में स्थानीय परिवेश क्यों उपयोगी है?','Why use the local environment in EVS?',['अनुभव से सीखने को जोड़ने के लिए','किताबें हटाने के लिए','परीक्षा आसान करने के लिए','केवल भ्रमण के लिए'],['To connect learning with experience','To remove books','To make exams easy','Only for excursions'],0);
+add('EVS','वाष्पीकरण के बाद जलवाष्प ठंडी होकर क्या करती है?','After evaporation, cooled water vapour undergoes:',['संघनन','दहन','पाचन','अंकुरण'],['Condensation','Combustion','Digestion','Germination'],0);
+add('EVS','जैव विविधता का अर्थ?','Meaning of biodiversity?',['जीवों की विविधता','केवल पेड़ों की संख्या','केवल जानवरों की संख्या','केवल मौसम'],['Variety of living organisms','Only number of trees','Only number of animals','Only weather'],0);
+add('EVS','EVS में अवलोकन गतिविधि का लाभ?','Benefit of observation in EVS?',['वास्तविक परिवेश से प्रमाण जुटाना','सीखना रोकना','केवल रटाना','केवल अंक देना'],['Gather evidence from the real environment','Stop learning','Only memorise','Only give marks'],0);
+// Hindi 30
+add('Hindi','“लड़का” का स्त्रीलिंग क्या है?','What is the feminine of “लड़का”?',['लड़की','लड़कियाँ','बालक','बालिका'],['लड़की','लड़कियाँ','बालक','बालिका'],0);
+add('Hindi','“सुंदर” का विलोम?','Antonym of “सुंदर”?',['कुरूप','अच्छा','मधुर','स्वच्छ'],['Ugly','Good','Sweet','Clean'],0);
+add('Hindi','“जल” का पर्यायवाची?','Synonym of “जल”?',['पानी','आकाश','अग्नि','पवन'],['पानी','आकाश','अग्नि','पवन'],0);
+add('Hindi','“राम ने फल खाया।” में कर्ता?','Subject in “राम ने फल खाया।”?',['राम','फल','खाया','ने'],['राम','फल','खाया','ने'],0);
+add('Hindi','“धीरे-धीरे” कौन-सा क्रिया-विशेषण है?','“धीरे-धीरे” is which type of adverb?',['रीतिवाचक','कालवाचक','स्थानवाचक','परिमाणवाचक'],['Manner','Time','Place','Quantity'],0);
+add('Hindi','“मैं स्कूल जाता हूँ।” में क्रिया?','Verb in “मैं स्कूल जाता हूँ।”?',['मैं','स्कूल','जाता हूँ','में'],['मैं','स्कूल','जाता हूँ','में'],2);
+add('Hindi','“पेड़” का बहुवचन?','Plural of “पेड़”?',['पेड़','पेड़ों','पेड़ें','पेड़ा'],['पेड़','पेड़ों','पेड़ें','पेड़ा'],0);
+add('Hindi','“सूरज” का पर्यायवाची?','Synonym of “सूरज”?',['सूर्य','चंद्र','बादल','धरती'],['सूर्य','चंद्र','बादल','धरती'],0);
+add('Hindi','“अंधकार” का विलोम?','Antonym of “अंधकार”?',['प्रकाश','रात्रि','छाया','काला'],['प्रकाश','रात्रि','छाया','काला'],0);
+add('Hindi','“और” किस प्रकार का शब्द है?','What type of word is “और”?',['समुच्चयबोधक','सर्वनाम','विशेषण','क्रिया'],['Conjunction','Pronoun','Adjective','Verb'],0);
+add('Hindi','“वह बाजार गया।” में “वह” क्या है?','What is “वह” in the sentence?',['सर्वनाम','संज्ञा','क्रिया','विशेषण'],['Pronoun','Noun','Verb','Adjective'],0);
+add('Hindi','“लाल फूल” में “लाल” क्या है?','What is “लाल” in “लाल फूल”?',['विशेषण','संज्ञा','सर्वनाम','क्रिया'],['Adjective','Noun','Pronoun','Verb'],0);
+add('Hindi','“बच्चे खेल रहे हैं।” कौन-सा काल है?','Which tense is “बच्चे खेल रहे हैं”?',['वर्तमान काल','भूतकाल','भविष्यत् काल','पूर्ण भूत'],['Present','Past','Future','Past perfect'],0);
+add('Hindi','भाषा सीखने में सुनना क्यों महत्वपूर्ण है?','Why is listening important in language learning?',['अर्थ और उच्चारण समझने में','केवल लिखावट में','केवल परीक्षा में','कोई महत्व नहीं'],['For understanding meaning and pronunciation','Only handwriting','Only exams','No importance'],0);
+add('Hindi','पठन समझ बढ़ाने का अच्छा तरीका?','A good way to improve reading comprehension?',['प्रश्न, चर्चा और संदर्भित पठन','केवल शब्द रटना','केवल नकल','केवल नियम रटना'],['Questions, discussion and contextual reading','Only memorising words','Only copying','Only memorising rules'],0);
+add('Hindi','“नाक कटना” का अर्थ?','Meaning of the idiom “नाक कटना”?',['अपमान होना','खुश होना','सोना','तेज दौड़ना'],['To be disgraced','To be happy','To sleep','To run fast'],0);
+add('Hindi','“आँखों का तारा” का अर्थ?','Meaning of “आँखों का तारा”?',['बहुत प्रिय व्यक्ति','दूर व्यक्ति','क्रोधित व्यक्ति','अनजान व्यक्ति'],['A very dear person','A distant person','An angry person','A stranger'],0);
+add('Hindi','“राजपुत्र” में कौन-सा समास है?','Which compound is “राजपुत्र”?',['तत्पुरुष','द्वंद्व','बहुव्रीहि','अव्ययीभाव'],['Tatpurusha','Dvandva','Bahuvrihi','Avyayibhava'],0);
+add('Hindi','“जो मेहनत करता है, वह सफल होता है।” किस प्रकार का वाक्य?','“जो मेहनत करता है, वह सफल होता है।” is what type?',['मिश्र वाक्य','सरल वाक्य','संयुक्त वाक्य','विस्मयादिबोधक'],['Complex sentence','Simple sentence','Compound sentence','Exclamatory'],0);
+add('Hindi','“कमल” किस प्रकार की संज्ञा है?','What type of noun is “कमल”?',['जातिवाचक','व्यक्तिवाचक','भाववाचक','समूहवाचक'],['Common','Proper','Abstract','Collective'],0);
+add('Hindi','“ईमानदारी” किस प्रकार की संज्ञा है?','What type of noun is “ईमानदारी”?',['भाववाचक','जातिवाचक','व्यक्तिवाचक','समूहवाचक'],['Abstract','Common','Proper','Collective'],0);
+add('Hindi','“गंगा” किस प्रकार की संज्ञा है?','What type of noun is “गंगा”?',['व्यक्तिवाचक','जातिवाचक','भाववाचक','समूहवाचक'],['Proper','Common','Abstract','Collective'],0);
+add('Hindi','कहानी सुनाने से भाषा में क्या विकसित होता है?','Storytelling can develop:',['शब्दावली और कल्पना','केवल लिखावट','केवल गणना','केवल अनुशासन'],['Vocabulary and imagination','Only handwriting','Only calculation','Only discipline'],0);
+add('Hindi','भाषा-त्रुटियों पर शिक्षक को क्या करना चाहिए?','What should a teacher do with language errors?',['उन्हें सीखने के अवसर की तरह उपयोग करना','हर बार दंड देना','बच्चे को चुप कराना','सभी संवाद रोकना'],['Use them as learning opportunities','Punish every time','Silence the child','Stop communication'],0);
+add('Hindi','“पुस्तकालय” का अर्थ?','Meaning of “पुस्तकालय”?',['पुस्तकों का स्थान','खेल का मैदान','भोजनालय','अस्पताल'],['Place for books','Playground','Dining hall','Hospital'],0);
+add('Hindi','“नदी बहती है।” में “बहती” क्या है?','What is “बहती” in the sentence?',['क्रिया','संज्ञा','विशेषण','सर्वनाम'],['Verb','Noun','Adjective','Pronoun'],0);
+add('Hindi','“बहुत” किस रूप में क्रिया-विशेषण हो सकता है?','“बहुत” can function as a/an:',['क्रिया-विशेषण','संज्ञा','सर्वनाम','समुच्चयबोधक'],['Adverb','Noun','Pronoun','Conjunction'],0);
+add('Hindi','जोड़ी में भाषा कार्य का लाभ?','Benefit of pair work in language learning?',['बोलने और संवाद के अवसर बढ़ते हैं','केवल मौन','केवल शिक्षक बोलता है','सीखना रुकता है'],['More opportunities for speaking and interaction','Only silence','Only teacher speaks','Learning stops'],0);
+add('Hindi','चित्रों का उपयोग किसमें सहायक है?','Pictures in language teaching help with:',['अर्थ-निर्माण और चर्चा','केवल सजावट','केवल उपस्थिति','केवल परीक्षा'],['Meaning-making and discussion','Only decoration','Only attendance','Only exams'],0);
+// English 30
+add('English','Choose the correct plural of “child”.','Choose the correct plural of “child”.',['childs','children','childes','childrens'],['childs','children','childes','childrens'],1);
+add('English','Choose the synonym of “happy”.','Choose the synonym of “happy”.',['sad','joyful','angry','weak'],['sad','joyful','angry','weak'],1);
+add('English','Choose the antonym of “early”.','Choose the antonym of “early”.',['soon','late','fast','quick'],['soon','late','fast','quick'],1);
+add('English','Identify the noun in “The boy reads a book.”','Identify the noun in “The boy reads a book.”',['reads','the','boy','a'],['reads','the','boy','a'],2);
+add('English','Choose the correct article: “___ apple a day is healthy.”','Choose the correct article: “___ apple a day is healthy.”',['A','An','The','No article'],['A','An','The','No article'],1);
+add('English','“She ___ to school every day.”','“She ___ to school every day.”',['go','goes','going','gone'],['go','goes','going','gone'],1);
+add('English','Past tense of “go”?','Past tense of “go”?',['goed','goes','went','gone'],['goed','goes','went','gone'],2);
+add('English','“The book is ___ the table.”','“The book is ___ the table.”',['on','at','to','by'],['on','at','to','by'],0);
+add('English','“Quickly” is a/an:','“Quickly” is a/an:',['noun','adjective','adverb','pronoun'],['noun','adjective','adverb','pronoun'],2);
+add('English','“Rita is a student. ___ is bright.”','“Rita is a student. ___ is bright.”',['He','She','It','They'],['He','She','It','They'],1);
+add('English','Choose the correct sentence.','Choose the correct sentence.',['He are happy.','He is happy.','He am happy.','He be happy.'],['He are happy.','He is happy.','He am happy.','He be happy.'],1);
+add('English','Comparative form of “good”?','Comparative form of “good”?',['gooder','more good','better','best'],['gooder','more good','better','best'],2);
+add('English','Choose the correct spelling.','Choose the correct spelling.',['beautiful','beautifull','beutiful','beautifal'],['beautiful','beautifull','beutiful','beautifal'],0);
+add('English','“Honesty” is a/an:','“Honesty” is a/an:',['abstract noun','proper noun','verb','adverb'],['abstract noun','proper noun','verb','adverb'],0);
+add('English','“___ are you going?”','“___ are you going?”',['Who','Where','Why','When'],['Who','Where','Why','When'],1);
+add('English','Passive form of “Ravi writes a letter.”','Passive form of “Ravi writes a letter.”',['A letter is written by Ravi.','A letter was written by Ravi.','Ravi is written by a letter.','A letter writes Ravi.'],['A letter is written by Ravi.','A letter was written by Ravi.','Ravi is written by a letter.','A letter writes Ravi.'],0);
+add('English','Meaning of “begin”?','Meaning of “begin”?',['start','finish','stop','close'],['start','finish','stop','close'],0);
+add('English','“I stayed home ___ it was raining.”',['and','because','or','but'],['and','because','or','but'],1);
+add('English','Speaking activities mainly develop:','Speaking activities mainly develop:',['Oral communication','Only handwriting','Only spelling','Only silent reading'],['Oral communication','Only handwriting','Only spelling','Only silent reading'],0);
+add('English','A child-friendly language classroom should encourage:','A child-friendly language classroom should encourage:',['Interaction and meaningful language use','Only memorisation','Fear of mistakes','Silence'],['Interaction and meaningful language use','Only memorisation','Fear of mistakes','Silence'],0);
+add('English','“They ___ playing.”',['is','am','are','be'],['is','am','are','be'],2);
+add('English','Opposite of “strong”?','Opposite of “strong”?',['weak','tall','large','bright'],['weak','tall','large','bright'],0);
+add('English','“This is ___ book.”',['I','me','my','mine is'],['I','me','my','mine is'],2);
+add('English','In “Beautiful flower”, “beautiful” is a/an:',['noun','adjective','verb','pronoun'],['noun','adjective','verb','pronoun'],1);
+add('English','Best activity for reading comprehension?','Best activity for reading comprehension?',['Asking questions about a text','Copying every word','Memorising title only','Ignoring context'],['Asking questions about a text','Copying every word','Memorising title only','Ignoring context'],0);
+add('English','Which is a productive language skill?','Which is a productive language skill?',['Writing','Listening','Reading','Viewing'],['Writing','Listening','Reading','Viewing'],0);
+add('English','Which is a receptive language skill?','Which is a receptive language skill?',['Speaking','Writing','Listening','Drawing'],['Speaking','Writing','Listening','Drawing'],2);
+add('English','Formative assessment mainly aims to:','Formative assessment mainly aims to:',['Improve learning during instruction','Rank students only','Punish mistakes','End teaching'],['Improve learning during instruction','Rank students only','Punish mistakes','End teaching'],0);
+add('English','Stories in an English class can develop:','Stories in an English class can develop:',['Vocabulary and comprehension','Only handwriting','Only arithmetic','Only attendance'],['Vocabulary and comprehension','Only handwriting','Only arithmetic','Only attendance'],0);
+add('English','When a learner makes a language error, a teacher should preferably:','When a learner makes a language error, a teacher should preferably:',['Use it as feedback for learning','Always punish the learner','Stop the learner speaking','Ignore all communication'],['Use it as feedback for learning','Always punish the learner','Stop the learner speaking','Ignore all communication'],0);
+
+let cur=0,ans=Array(150).fill(null),remaining=9000,running=true;
+function renderTabs(){document.getElementById('tabs').innerHTML=S.map((x,i)=>`<button class="tab ${Math.floor(cur/30)===i?'active':''}" onclick="jump(${i*30})">${x[0]}<br><span class="sub">${x[1]}</span></button>`).join('')}
+function getText(x){let l=document.getElementById('lang').value;if(l==='en')return x.en;if(l==='hi')return x.hi;return x.en+'<br><span class="muted">'+x.hi+'</span>'}
+function render(){let x=A[cur];renderTabs();let lang=document.getElementById('lang').value;let opts=lang==='en'?x.oe:lang==='hi'?x.oh:x.oe.map((v,i)=>v+'<br><span class="muted">'+x.oh[i]+'</span>');document.getElementById('question').innerHTML=`<div class="section">Section ${Math.floor(cur/30)+1}: ${x.s} — ${S.find(v=>v[0]===x.s)[1]}</div><div class="qno">Question ${cur+1} of 150</div><div class="q">${getText(x)}</div><div>${opts.map((o,i)=>`<label class="opt"><input type="radio" name="opt" ${ans[cur]===i?'checked':''} onchange="ans[cur]=${i};renderPalette()"> <b>${String.fromCharCode(65+i)}.</b> ${o}</label>`).join('')}</div>`;renderPalette();window.scrollTo({top:0,behavior:'smooth'})}
+function renderPalette(){let h='';for(let s=0;s<5;s++){h+=`<div class="section">${S[s][0]} • Q${s*30+1}–${s*30+30}</div><div class="palette">`;for(let i=s*30;i<s*30+30;i++)h+=`<button class="p ${i===cur?'current ':''}${ans[i]!==null?'answered':''}" onclick="jump(${i})">${i+1}</button>`;h+='</div>'}document.getElementById('palette').innerHTML=h}
+function jump(i){cur=i;render()}function prevQ(){if(cur>0){cur--;render()}}function nextQ(){if(cur<149){cur++;render()}else submitTest()}
+function submitTest(){if(!running)return;if(!confirm('क्या आप टेस्ट submit करना चाहते हैं? / Submit the test?'))return;running=false;let correct=ans.reduce((n,v,i)=>n+(v===A[i].a?1:0),0),attempt=ans.filter(v=>v!==null).length;document.getElementById('layout').style.display='none';let r=document.getElementById('result');r.style.display='block';r.innerHTML=`<div class="score">${correct} / 150</div><h2>Test Submitted</h2><p>Correct: ${correct} • Wrong: ${attempt-correct} • Not Answered: ${150-attempt}</p><p>Percentage: ${(correct/150*100).toFixed(2)}%</p><button class="btn" onclick="location.reload()">Retake Test</button>`}
+function tick(){if(!running)return;remaining--;let m=Math.floor(remaining/60),s=remaining%60;document.getElementById('timer').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');if(remaining<=0){alert('Time is over. Test will be submitted.');submitTest();return}setTimeout(tick,1000)}
+render();tick();
 </script></body></html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CTET Paper 1 Full Test | Pause & Resume</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;height:100%;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}.top{height:64px;background:linear-gradient(120deg,#312e81,#2563eb);color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 18px;gap:12px}.title{font-weight:800;font-size:20px}.controls{display:flex;gap:8px;align-items:center}.btn{border:0;border-radius:8px;padding:10px 16px;font-weight:800;cursor:pointer}.pause{background:#f59e0b;color:#111827}.resume{background:#16a34a;color:#fff;display:none}.status{font-size:13px;font-weight:700}.frame-wrap{height:calc(100vh - 64px);position:relative}.frame{width:100%;height:100%;border:0;display:block}.cover{position:absolute;inset:0;background:rgba(15,23,42,.78);display:none;align-items:center;justify-content:center;z-index:10}.cover-box{background:#fff;border-radius:16px;padding:28px 36px;text-align:center;box-shadow:0 10px 40px #0005}.cover-box h2{margin:0 0 8px}.cover-box p{margin:0;color:#64748b}@media(max-width:600px){.title{font-size:16px}.top{height:58px}.frame-wrap{height:calc(100vh - 58px)}.btn{padding:9px 12px}.status{display:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="title">🎓 CTET Paper 1 — Full Test</div>
+  <div class="controls">
+    <span id="status" class="status">Test Running</span>
+    <button id="pauseBtn" class="btn pause" onclick="pauseTest()">⏸ Pause</button>
+    <button id="resumeBtn" class="btn resume" onclick="resumeTest()">▶ Resume</button>
+  </div>
+</header>
+<div class="frame-wrap">
+  <iframe id="testFrame" class="frame" src="ctet-paper1-full-test.html" title="CTET Paper 1 Full Test"></iframe>
+  <div id="cover" class="cover"><div class="cover-box"><h2>⏸ Test Paused</h2><p>Timer भी pause है। Resume दबाकर test जारी करें।</p></div></div>
+</div>
+<script>
+const frame=document.getElementById('testFrame');
+let originalNow=null,paused=false,pauseReal=0,totalPaused=0;
+function patchClock(){
+  try{
+    const w=frame.contentWindow;
+    if(!w||!w.Date)return;
+    originalNow=w.Date.now.bind(w.Date);
+    let offset=0;
+    w.Date.now=function(){return originalNow()-offset;};
+    window._clock={w,get offset(){return offset},set offset(v){offset=v},originalNow};
+  }catch(e){console.error(e)}
+}
+frame.addEventListener('load',()=>setTimeout(patchClock,50));
+function pauseTest(){
+  if(paused)return;
+  const c=window._clock;
+  if(!c){alert('Test अभी load हो रहा है। 1-2 सेकंड बाद Pause दबाएँ।');return;}
+  pauseReal=c.originalNow();
+  paused=true;
+  c.w.Date.now=function(){return pauseReal-c.offset;};
+  document.getElementById('cover').style.display='flex';
+  document.getElementById('pauseBtn').style.display='none';
+  document.getElementById('resumeBtn').style.display='inline-block';
+  document.getElementById('status').textContent='Test Paused';
+}
+function resumeTest(){
+  if(!paused)return;
+  const c=window._clock;
+  const now=c.originalNow();
+  c.offset += now-pauseReal;
+  c.w.Date.now=function(){return c.originalNow()-c.offset;};
+  paused=false;
+  document.getElementById('cover').style.display='none';
+  document.getElementById('pauseBtn').style.display='inline-block';
+  document.getElementById('resumeBtn').style.display='none';
+  document.getElementById('status').textContent='Test Running';
+}
+</script>
+</body>
+</html>

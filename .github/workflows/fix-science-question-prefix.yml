@@ -1,0 +1,51 @@
+name: Fix Science Question Prefix
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Remove generic question instructions
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('science-tests.html')
+          s = p.read_text(encoding='utf-8')
+          old = s
+          patterns = [
+              r'Choose the correct option\\.\\s*',
+              r'Choose the correct option\\s*',
+              r'निम्न में से सही विकल्प चुनिए\\.\\s*',
+              r'निम्न में से सही विकल्प चुनिए।\\s*',
+              r'निम्न में से सही विकल्प चुनिए\\s*',
+          ]
+          for pat in patterns:
+              s = re.sub(pat, '', s)
+          if s != old:
+              p.write_text(s, encoding='utf-8')
+              print('Question instruction prefixes removed.')
+          else:
+              print('No matching prefix found; no change needed.')
+          PY
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add science-tests.html
+          if git diff --cached --quiet; then
+            echo 'Nothing to commit.'
+          else
+            git commit -m 'Remove generic instruction from science questions'
+            git push
+          fi

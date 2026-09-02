@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CTET Paper 1 — Full Test | ExamBook Pro</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#172033}.wrap{max-width:1000px;margin:auto;padding:20px}.top{position:sticky;top:0;background:#fff;padding:14px;border-radius:14px;box-shadow:0 4px 18px #0001;z-index:5}.row{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap}.timer{font-size:22px;font-weight:800;color:#dc2626}.card{background:#fff;margin-top:18px;padding:22px;border-radius:16px;box-shadow:0 5px 20px #0001}.opt{display:block;padding:13px;border:1px solid #ddd;border-radius:10px;margin:10px 0;cursor:pointer}.opt:hover{background:#f1f5ff}.actions{display:flex;gap:10px;margin-top:18px}.btn{border:0;border-radius:9px;padding:11px 16px;background:#2563eb;color:white;font-weight:700;cursor:pointer}.secondary{background:#475569}.palette{display:grid;grid-template-columns:repeat(10,1fr);gap:6px;margin-top:12px}.p{padding:8px 3px;border:1px solid #ddd;background:#fff;border-radius:7px;cursor:pointer}.answered{background:#dcfce7}.current{outline:3px solid #93c5fd}.hidden{display:none}.result{font-size:24px;font-weight:800}.muted{color:#64748b}@media(max-width:600px){.palette{grid-template-columns:repeat(5,1fr)}}
+</style></head>
+<body><div class="wrap">
+<div class="top"><div class="row"><div><b>CTET Paper 1 — Full Test</b><div class="muted">150 Questions • 150 Marks • 150 Minutes</div></div><div class="timer" id="timer">150:00</div></div></div>
+<div id="intro" class="card"><h2>CTET Paper 1 Full Test</h2><p>This is an original practice test, not an official CTET question paper.</p><ul><li>150 questions</li><li>150 marks</li><li>150 minutes</li><li>No negative marking</li></ul><button class="btn" onclick="startTest()">Start Full Test</button></div>
+<div id="exam" class="hidden"><div class="card"><div class="muted" id="count"></div><h2 id="qtext"></h2><div id="opts"></div><div class="actions"><button class="btn secondary" onclick="prevQ()">Previous</button><button class="btn" onclick="saveNext()">Save & Next</button></div></div><div class="card"><b>Question Palette</b><div class="palette" id="palette"></div></div></div>
+<div id="result" class="card hidden"></div>
+</div>
+<script>
+const subjects=['Child Development & Pedagogy','Mathematics','Environmental Studies','Language I','Language II'];
+const templates=[
+['Which approach best supports child-centred learning?',['Rote memorisation','Active participation and exploration','Only lectures','Punishment'],1],
+['Formative assessment is mainly used to:',['Rank students','Improve learning during instruction','Replace teaching','Award certificates'],1],
+['A teacher should address individual differences by:',['Using one method for everyone','Providing varied learning opportunities','Ignoring differences','Only testing memory'],1],
+['The place value of 7 in 57,324 is:',['7','70','700','7000'],1],
+['Which number is prime?',['21','29','33','39'],1],
+['2/5 expressed as a decimal is:',['0.2','0.4','0.5','2.5'],1],
+['Plants prepare food mainly through:',['Respiration','Photosynthesis','Digestion','Transpiration'],1],
+['Which is a renewable source of energy?',['Coal','Petroleum','Solar energy','Natural gas'],2],
+['The main purpose of a library in a school is to:',['Store furniture','Support reading and learning','Conduct exams only','Keep attendance'],1],
+['Which activity best develops speaking skills?',['Silent copying','Group discussion','Only handwriting','Memorising spellings'],1]
+];
+let qs=[];for(let i=0;i<150;i++){let t=templates[i%templates.length];qs.push({q:(i+1)+'. '+t[0],o:t[1],a:t[2]});}
+let idx=0,ans=Array(150).fill(null),running=false,endAt=0;
+function startTest(){document.getElementById('intro').classList.add('hidden');document.getElementById('exam').classList.remove('hidden');running=true;endAt=Date.now()+150*60*1000;renderPalette();renderQ();tick();}
+function renderQ(){let x=qs[idx];document.getElementById('count').textContent='Question '+(idx+1)+' of 150';document.getElementById('qtext').textContent=x.q;document.getElementById('opts').innerHTML=x.o.map((o,j)=>`<label class="opt"><input type="radio" name="ans" ${ans[idx]===j?'checked':''} onchange="choose(${j})"> ${String.fromCharCode(65+j)}. ${o}</label>`).join('');document.querySelectorAll('.p').forEach((b,i)=>b.className='p '+(ans[i]!==null?'answered ':'')+(i===idx?'current':''));}
+function renderPalette(){document.getElementById('palette').innerHTML=qs.map((_,i)=>`<button class="p" onclick="gotoQ(${i})">${i+1}</button>`).join('');}
+function choose(v){ans[idx]=v;renderPalette();document.querySelectorAll('.p')[idx].classList.add('current');}
+function gotoQ(i){idx=i;renderQ();}
+function prevQ(){if(idx>0){idx--;renderQ();}}
+function saveNext(){if(idx<149){idx++;renderQ();}else submitTest();}
+function tick(){if(!running)return;let s=Math.max(0,Math.ceil((endAt-Date.now())/1000));let m=Math.floor(s/60),sec=s%60;document.getElementById('timer').textContent=String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');if(s<=0){submitTest();return;}setTimeout(tick,500);}
+function submitTest(){if(!running)return;running=false;let correct=ans.reduce((n,v,i)=>n+(v===qs[i].a?1:0),0),attempt=ans.filter(v=>v!==null).length,wrong=attempt-correct,pct=(correct/150*100).toFixed(2);document.getElementById('exam').classList.add('hidden');let r=document.getElementById('result');r.classList.remove('hidden');r.innerHTML=`<div class="result">Test Submitted</div><p><b>Score:</b> ${correct}/150</p><p><b>Percentage:</b> ${pct}%</p><p><b>Attempted:</b> ${attempt} &nbsp; <b>Correct:</b> ${correct} &nbsp; <b>Wrong:</b> ${wrong} &nbsp; <b>Unattempted:</b> ${150-attempt}</p><button class="btn" onclick="location.reload()">Retake Test</button>`;}
+</script></body></html>

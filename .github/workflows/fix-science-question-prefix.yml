@@ -23,11 +23,11 @@ jobs:
           s = p.read_text(encoding='utf-8')
           old = s
           patterns = [
-              r'Choose the correct option\\.\\s*',
-              r'Choose the correct option\\s*',
-              r'निम्न में से सही विकल्प चुनिए\\.\\s*',
-              r'निम्न में से सही विकल्प चुनिए।\\s*',
-              r'निम्न में से सही विकल्प चुनिए\\s*',
+              r'Choose the correct option\.\s*',
+              r'Choose the correct option\s*',
+              r'निम्न में से सही विकल्प चुनिए\.\s*',
+              r'निम्न में से सही विकल्प चुनिए।\s*',
+              r'निम्न में से सही विकल्प चुनिए\s*',
           ]
           for pat in patterns:
               s = re.sub(pat, '', s)

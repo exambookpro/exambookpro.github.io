@@ -57,4 +57,5 @@ function pauseTest(){if(!running)return;running=false;document.getElementById('c
 function resumeTest(){if(running)return;running=true;document.getElementById('cover').style.display='none';document.getElementById('pause').style.display='inline-block';document.getElementById('resume').style.display='none'}
 function submitTest(){if(!confirm('क्या आप टेस्ट submit करना चाहते हैं?'))return;clearInterval(interval);let correct=0,attempt=0;answers.forEach((a,i)=>{if(a!==null){attempt++;if(a===selected[i].a)correct++;}});let wrong=attempt-correct;let score=correct-(wrong*C.neg);document.getElementById('layout').style.display='none';let r=document.getElementById('result');r.style.display='block';r.innerHTML=`<h2>🎉 Test Completed</h2><div class="score">${score.toFixed(2)} / ${C.marks}</div><p>सही: ${correct} &nbsp; | &nbsp; गलत: ${wrong} &nbsp; | &nbsp; छोड़े: ${C.n-attempt}</p><p class="muted">अगले attempt में पहले इस्तेमाल किए गए questions दोबारा नहीं आएँगे, जब तक question bank समाप्त नहीं होता।</p><button class="btn" onclick="location.reload()">New Test</button>`}
 render();
-</script></body></html>
+</script><script src="stats.js"></script>
+</body></html>

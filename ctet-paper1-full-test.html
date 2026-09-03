@@ -168,4 +168,5 @@ function jump(i){cur=i;render()}function prevQ(){if(cur>0){cur--;render()}}funct
 function submitTest(){if(!running)return;if(!confirm('क्या आप टेस्ट submit करना चाहते हैं? / Submit the test?'))return;running=false;let correct=ans.reduce((n,v,i)=>n+(v===A[i].a?1:0),0),attempt=ans.filter(v=>v!==null).length;document.getElementById('layout').style.display='none';let r=document.getElementById('result');r.style.display='block';r.innerHTML=`<div class="score">${correct} / 150</div><h2>Test Submitted</h2><p>Correct: ${correct} • Wrong: ${attempt-correct} • Not Answered: ${150-attempt}</p><p>Percentage: ${(correct/150*100).toFixed(2)}%</p><button class="btn" onclick="location.reload()">Retake Test</button>`}
 function tick(){if(!running)return;remaining--;let m=Math.floor(remaining/60),s=remaining%60;document.getElementById('timer').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');if(remaining<=0){alert('Time is over. Test will be submitted.');submitTest();return}setTimeout(tick,1000)}
 render();tick();
-</script></body></html>
+</script><script src="stats.js"></script>
+</body></html>

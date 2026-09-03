@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ExamBook Pro — Login / Sign Up</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:linear-gradient(135deg,#eef2ff,#dbeafe);min-height:100vh;color:#172033;display:grid;place-items:center;padding:20px}.box{width:min(440px,100%);background:#fff;border-radius:18px;padding:30px;box-shadow:0 12px 40px #0002}.brand{text-align:center;font-size:27px;font-weight:900;color:#2563eb;margin-bottom:8px}.sub{text-align:center;color:#64748b;margin-bottom:24px}h2{margin:0 0 18px}.tabs{display:flex;gap:8px;margin-bottom:20px}.tab{flex:1;padding:11px;border:0;border-radius:9px;background:#e2e8f0;font-weight:800;cursor:pointer}.tab.active{background:#2563eb;color:#fff}label{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}input{width:100%;padding:12px;border:1px solid #d7dce5;border-radius:9px;font-size:15px}.btn{width:100%;border:0;border-radius:9px;padding:12px;background:#2563eb;color:#fff;font-weight:800;font-size:15px;cursor:pointer;margin-top:18px}.btn:disabled{opacity:.6;cursor:not-allowed}.notice{padding:11px 13px;border-radius:9px;margin-top:15px;display:none;line-height:1.45}.success{display:block;background:#ecfdf5;color:#166534}.error{display:block;background:#fef2f2;color:#991b1b}.back{display:block;text-align:center;margin-top:18px;color:#2563eb;text-decoration:none;font-weight:700}.small{font-size:12px;color:#64748b;margin-top:14px;line-height:1.45}.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="box">
+<div class="brand">📚 ExamBook Pro</div><div class="sub">अपने account में Login करें या नया account बनाएं</div>
+<div class="tabs"><button id="loginTab" class="tab active" onclick="showMode('login')">Login</button><button id="signupTab" class="tab" onclick="showMode('signup')">Sign Up</button></div>
+<form id="authForm" onsubmit="submitAuth(event)">
+<div id="nameWrap" class="hidden"><label for="name">Name</label><input id="name" type="text" placeholder="अपना नाम" autocomplete="name"></div>
+<label for="email">Email</label><input id="email" type="email" placeholder="example@gmail.com" autocomplete="email" required>
+<label for="password">Password</label><input id="password" type="password" placeholder="कम से कम 6 characters" minlength="6" autocomplete="current-password" required>
+<div id="confirmWrap" class="hidden"><label for="confirm">Confirm Password</label><input id="confirm" type="password" placeholder="Password दोबारा लिखें" minlength="6" autocomplete="new-password"></div>
+<button id="submitBtn" class="btn" type="submit">Login</button></form>
+<div id="notice" class="notice"></div>
+<div class="small">Login/Sign Up Supabase Auth से सुरक्षित रूप से handle होगा। Password इस website के code में store नहीं होगा।</div>
+<a class="back" href="index.html">← Home पर वापस जाएँ</a>
+</div>
+<script>
+const SUPABASE_URL="https://abgigsjhdvsqehgdhbym.supabase.co";
+const SUPABASE_KEY="sb_publishable_GGcJmjwLXRrYsX8-sYph_g_Gt-0riU_";
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let mode='login';
+const $=id=>document.getElementById(id);
+function showMode(m){mode=m;const signup=m==='signup';$('loginTab').classList.toggle('active',!signup);$('signupTab').classList.toggle('active',signup);$('nameWrap').classList.toggle('hidden',!signup);$('confirmWrap').classList.toggle('hidden',!signup);$('submitBtn').textContent=signup?'Create Account':'Login';$('password').autocomplete=signup?'new-password':'current-password';$('notice').className='notice';$('notice').textContent='';}
+function msg(text,type){$('notice').textContent=text;$('notice').className='notice '+type;}
+async function submitAuth(e){e.preventDefault();const email=$('email').value.trim(),password=$('password').value;if(mode==='signup')await signup(email,password);else await login(email,password)}
+async function signup(email,password){const name=$('name').value.trim(),confirm=$('confirm').value;if(password!==confirm)return msg('दोनों passwords एक जैसे होने चाहिए।','error');if(password.length<6)return msg('Password कम से कम 6 characters का रखें।','error');$('submitBtn').disabled=true;$('submitBtn').textContent='Creating...';const {data,error}=await sb.auth.signUp({email,password,options:{data:{full_name:name}}});$('submitBtn').disabled=false;$('submitBtn').textContent='Create Account';if(error)return msg(error.message,'error');if(data.session){msg('✅ Account बन गया और आप Login हो गए।','success');setTimeout(()=>location.href='index.html',700)}else msg('✅ Account बन गया। अगर email confirmation enabled है तो अपने email में verification link खोलें, फिर Login करें।','success')}
+async function login(email,password){$('submitBtn').disabled=true;$('submitBtn').textContent='Logging in...';const {data,error}=await sb.auth.signInWithPassword({email,password});$('submitBtn').disabled=false;$('submitBtn').textContent='Login';if(error)return msg(error.message,'error');if(data.session){msg('✅ Login successful!','success');setTimeout(()=>location.href='index.html',500)}}
+(async()=>{const {data}=await sb.auth.getSession();if(data.session){msg('आप पहले से Login हैं। Home पर जा सकते हैं।','success')}})();
+</script>
+</body></html>

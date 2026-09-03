@@ -1,0 +1,33 @@
+name: Add test statistics tracker
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  inject:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inject tracker into test pages
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          files=['ctet-paper1-full-test.html','ctet-paper1-full-test-pause.html','science-tests.html','competitive-tests.html','mock-tests.html']
+          for name in files:
+              p=Path(name)
+              if not p.exists(): continue
+              s=p.read_text(encoding='utf-8')
+              tag='<script src="stats.js"></script>'
+              if tag not in s and '</body>' in s:
+                  s=s.replace('</body>',tag+'\n</body>',1)
+                  p.write_text(s,encoding='utf-8')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .
+          git diff --cached --quiet || git commit -m 'Connect tests to profile statistics'
+          git push

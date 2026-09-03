@@ -78,7 +78,7 @@ const bank=[
 ['उर्ध्वपातन में पदार्थ किस प्रकार बदलता है?','In sublimation, how does a substance change?','ठोस से सीधे गैस','Solid directly to gas',['गैस से द्रव','Gas to liquid','द्रव से ठोस','Liquid to solid','द्रव से गैस','Liquid to gas']]
 ];
 
-const bank2=[];for(let i=0;i<1500;i++){let b=bank[i%bank.length];bank2.push({hi:b[0],en:b[1],opts:[b[2],b[4][0],b[4][2],b[4][4]],a:0,id:'SCI-'+i})}
+const bank2=[];for(let i=0;i<1500;i++){let b=bank[i%bank.length];let opts=[b[2]+' / '+b[3],b[4][0]+' / '+b[4][1],b[4][2]+' / '+b[4][3],b[4][4]+' / '+b[4][5]];bank2.push({hi:b[0],en:b[1],opts:opts,a:0,id:'SCI-'+i})}
 const mocks=Array.from({length:50},(_,i)=>({id:i+1,qs:bank2.slice(i*30,i*30+30)}));let current=[],idx=0,ans=[],left=1800,timer,paused=false;
 const cards=document.getElementById('cards');cards.innerHTML=mocks.map(m=>`<article class="card"><span class="badge">Mixed Science</span><h3>🧪 Science Mock Test ${m.id}</h3><div class="muted">30 Questions • 30 Marks • 30 Minutes<br>Class 7–10 • Fully Mixed<br>No chapter-wise section</div><button class="btn start" onclick="startT(${m.id})">Start Test</button></article>`).join('');
 function startT(id){current=mocks[id-1].qs;idx=0;ans=Array(30).fill(null);left=1800;paused=false;home.style.display='none';test.classList.add('active');tt.textContent='Science Mixed Mock Test '+id;tm.textContent='30 Questions • 30 Marks • 30 Minutes • Class 7–10 Mixed Science';pause.style.display='inline-block';resume.style.display='none';res.style.display='none';document.querySelector('.actions').style.display='flex';cover.style.display='none';renderQ();clearInterval(timer);timer=setInterval(tick,1000);clock.textContent='30:00'}

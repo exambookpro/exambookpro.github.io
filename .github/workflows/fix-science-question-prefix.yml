@@ -3,6 +3,9 @@ name: Fix Science Question Prefix
 on:
   push:
     branches: [main]
+    paths:
+      - 'science-tests.html'
+      - '.github/workflows/fix-science-question-prefix.yml'
 
 permissions:
   contents: write
@@ -14,28 +17,21 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Remove generic question instructions
+      - name: Remove generated question instruction prefixes
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
           p = Path('science-tests.html')
           s = p.read_text(encoding='utf-8')
-          old = s
-          patterns = [
-              r'Choose the correct option\.\s*',
-              r'Choose the correct option\s*',
-              r'निम्न में से सही विकल्प चुनिए\.\s*',
-              r'निम्न में से सही विकल्प चुनिए।\s*',
-              r'निम्न में से सही विकल्प चुनिए\s*',
-          ]
-          for pat in patterns:
-              s = re.sub(pat, '', s)
-          if s != old:
+          start = s.find('const stems=')
+          end = s.find('const mocks=', start)
+          if start != -1 and end != -1:
+              replacement = "const bank2=[];for(let i=0;i<1500;i++){let b=bank[i%bank.length];bank2.push({hi:b[0],en:b[1],opts:[b[2],b[4][0],b[4][2],b[4][4]],a:0,id:'SCI-'+i})}\n"
+              s = s[:start] + replacement + s[end:]
               p.write_text(s, encoding='utf-8')
-              print('Question instruction prefixes removed.')
+              print('Removed generated instruction prefixes.')
           else:
-              print('No matching prefix found; no change needed.')
+              print('Prefix generator already removed; no change needed.')
           PY
 
       - name: Commit and push if changed

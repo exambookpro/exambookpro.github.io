@@ -17,21 +17,29 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Remove generated question instruction prefixes
+      - name: Fix Science question text and bilingual options
         run: |
           python - <<'PY'
           from pathlib import Path
           p = Path('science-tests.html')
           s = p.read_text(encoding='utf-8')
+
+          # Remove any old generated prefix/stem block if it still exists.
           start = s.find('const stems=')
           end = s.find('const mocks=', start)
           if start != -1 and end != -1:
-              replacement = "const bank2=[];for(let i=0;i<1500;i++){let b=bank[i%bank.length];bank2.push({hi:b[0],en:b[1],opts:[b[2],b[4][0],b[4][2],b[4][4]],a:0,id:'SCI-'+i})}\n"
+              s = s[:start] + s[end:]
+
+          # Build 1500 questions from the existing Science bank. Each option is
+          # stored as Hindi + English so the English + Hindi view shows both.
+          start = s.find('const bank2=[];')
+          end = s.find('const mocks=', start)
+          if start != -1 and end != -1:
+              replacement = """const bank2=[];for(let i=0;i<1500;i++){let b=bank[i%bank.length];let opts=[b[2]+' / '+b[3],b[4][0]+' / '+b[4][1],b[4][2]+' / '+b[4][3],b[4][4]+' / '+b[4][5]];bank2.push({hi:b[0],en:b[1],opts:opts,a:0,id:'SCI-'+i})}\n"""
               s = s[:start] + replacement + s[end:]
-              p.write_text(s, encoding='utf-8')
-              print('Removed generated instruction prefixes.')
-          else:
-              print('Prefix generator already removed; no change needed.')
+
+          p.write_text(s, encoding='utf-8')
+          print('Science bilingual options fixed.')
           PY
 
       - name: Commit and push if changed
@@ -42,6 +50,6 @@ jobs:
           if git diff --cached --quiet; then
             echo 'Nothing to commit.'
           else
-            git commit -m 'Remove generic instruction from science questions'
+            git commit -m 'Fix bilingual science answer options'
             git push
           fi

@@ -14,35 +14,65 @@ const params=new URLSearchParams(location.search),exam=params.get('exam')||'ssc-
 document.getElementById('title').textContent=`${info[1]} ${info[0]} — Mock Test ${mock}`;document.getElementById('meta').textContent=info[2];
 function rng(seed){let x=seed>>>0;return()=>{x=(x*1664525+1013904223)>>>0;return x/4294967296}}const r=rng(9000+mock*731+exam.length*97);function pick(a,n){let b=[...a],o=[];while(o.length<n)o.push(b.splice(Math.floor(r()*b.length),1)[0]);return o}
 let qSeq=0;function q(hi,en,opts,a,s){let o=opts.slice(),shift=qSeq++%4;for(let z=0;z<shift;z++)o.push(o.shift());let correct=(a+shift)%o.length,ans=o[correct];let expHi=s==='Quantitative Aptitude'?`गणना करने पर सही उत्तर ${ans} प्राप्त होता है।`:s==='Reasoning'?`दिए गए क्रम/नियम को लागू करने पर सही उत्तर ${ans} प्राप्त होता है।`:`दिए गए प्रश्न के तथ्य/नियम के अनुसार सही उत्तर ${ans} है।`;let expEn=s==='Quantitative Aptitude'?`After calculation, the correct answer is ${ans}.`:s==='Reasoning'?`Applying the given sequence/rule gives ${ans} as the correct answer.`:`According to the fact/rule asked in the question, ${ans} is the correct answer.`;return{hi,en,opts:o,a:correct,s,expHi,expEn}}
-function bank(){let B=[];
-for(let i=0;i<90;i++){let a=11+i*3+mock,b=7+(i%17),c=a+b;B.push(q(`${a} + ${b} = ?`,`What is ${a} + ${b}?`,[String(c),String(c+2),String(c-2),String(c+5)],0,'Quantitative Aptitude'))}
-for(let i=0;i<60;i++){let a=80+i*2,b=20+(i%10),c=a-b;B.push(q(`${a} में से ${b} घटाने पर क्या मिलेगा?`,`What is ${a} - ${b}?`,[String(c),String(c+5),String(c-5),String(c+10)],0,'Quantitative Aptitude'))}
-for(let i=0;i<60;i++){let a=4+(i%16),b=3+(i%9),c=a*b;B.push(q(`${a} × ${b} = ?`,`What is ${a} × ${b}?`,[String(c),String(c+1),String(c-1),String(c+5)],0,'Quantitative Aptitude'))}
-for(let i=0;i<45;i++){let a=5+i,b=a+5,c=b+5;B.push(q(`श्रृंखला ${a}, ${b}, ${c}, ? में अगली संख्या क्या है?`,`Find the next number: ${a}, ${b}, ${c}, ?`,[String(c+5),String(c+3),String(c+10),String(c+1)],0,'Reasoning'))}
-for(let i=0;i<45;i++){let word=['CAT','DOG','BAT','SUN','PEN'][i%5],shift=1+(i%3),out=word.split('').map(ch=>String.fromCharCode(ch.charCodeAt(0)+shift)).join('');B.push(q(`${word} के प्रत्येक अक्षर में ${shift} जोड़ने पर कोड क्या होगा?`,`If each letter of ${word} is shifted by ${shift}, what is the code?`,[out,word,word.split('').reverse().join(''),out.slice(0,-1)],0,'Reasoning'))}
-const facts=[
-['भारत का संविधान कब लागू हुआ?','When did the Constitution of India come into force?',['26 जनवरी 1950','15 अगस्त 1947','26 नवंबर 1949','2 अक्टूबर 1950'],0],
-['भारत का राष्ट्रीय पशु कौन है?','What is the national animal of India?',['बाघ','सिंह','हाथी','मोर'],0],
-['भारत की राजधानी क्या है?','What is the capital of India?',['नई दिल्ली','मुंबई','कोलकाता','चेन्नई'],0],
-['भारतीय संविधान की प्रस्तावना में कितने प्रमुख आदर्श बताए गए हैं?','Which ideals are prominently stated in the Preamble?',['न्याय, स्वतंत्रता, समानता और बंधुता','केवल न्याय','केवल समानता','केवल स्वतंत्रता'],0],
-['सूर्य के सबसे निकट ग्रह कौन-सा है?','Which planet is closest to the Sun?',['बुध','शुक्र','पृथ्वी','मंगल'],0],
-['जल का रासायनिक सूत्र क्या है?','What is the chemical formula of water?',['H₂O','CO₂','O₂','NaCl'],0],
-['पृथ्वी का उपग्रह कौन है?','What is Earth’s natural satellite?',['चंद्रमा','सूर्य','मंगल','शुक्र'],0],
-['भारत में हरित क्रांति का संबंध मुख्यतः किससे है?','The Green Revolution in India is mainly associated with:',['कृषि उत्पादन','दूरसंचार','परिवहन','खनन'],0],
-['लोकसभा का सामान्य कार्यकाल कितना है?','What is the normal term of the Lok Sabha?',['5 वर्ष','4 वर्ष','6 वर्ष','7 वर्ष'],0],
-['RBI का मुख्यालय कहाँ है?','Where is the headquarters of RBI?',['मुंबई','नई दिल्ली','पटना','कोलकाता'],0],
-['बिहार की राजधानी क्या है?','What is the capital of Bihar?',['पटना','गया','भागलपुर','मुजफ्फरपुर'],0],
-['बिहार दिवस कब मनाया जाता है?','When is Bihar Day observed?',['22 मार्च','15 अगस्त','26 जनवरी','2 अक्टूबर'],0],
-['बोधगया किस जिले में है?','Bodh Gaya is in which district?',['गया','पटना','नालंदा','भोजपुर'],0],
-['नालंदा प्राचीन विश्वविद्यालय किस राज्य में था?','Nalanda ancient university was in which state?',['बिहार','उत्तर प्रदेश','मध्य प्रदेश','राजस्थान'],0],
-['भारतीय संसद के दो सदन कौन-से हैं?','What are the two Houses of the Indian Parliament?',['लोकसभा और राज्यसभा','विधानसभा और परिषद','लोकसभा और विधानसभा','राज्यसभा और परिषद'],0],
-['भारतीय राष्ट्रीय ध्वज के बीच में कौन-सा चक्र है?','Which wheel is at the centre of India’s national flag?',['अशोक चक्र','धर्म चक्र','सूर्य चक्र','विजय चक्र'],0],
-['वायुमंडल में सर्वाधिक गैस कौन-सी है?','Which gas is most abundant in Earth’s atmosphere?',['नाइट्रोजन','ऑक्सीजन','कार्बन डाइऑक्साइड','हाइड्रोजन'],0],
-['मानव शरीर में रक्त पंप करने वाला अंग कौन-सा है?','Which organ pumps blood in the human body?',['हृदय','फेफड़ा','यकृत','गुर्दा'],0],
-['बल की SI इकाई क्या है?','What is the SI unit of force?',['न्यूटन','जूल','वाट','पास्कल'],0],
-['प्रकाश की गति निर्वात में लगभग कितनी है?','What is the approximate speed of light in vacuum?',['3×10⁸ m/s','3×10⁶ m/s','3×10⁴ m/s','3×10¹⁰ m/s'],0]
-];facts.forEach(x=>B.push(q(x[0],x[1],x[2],x[3],exam.includes('bihar')||exam==='bpsc-cce'?'General Studies':'General Awareness')));
-const eng=[['He ___ to school every day.','He ___ to school every day.',['goes','go','going','gone'],0],['Choose the antonym of “ancient”.','Choose the antonym of “ancient”.',['modern','old','early','past'],0],['Choose the synonym of “rapid”.','Choose the synonym of “rapid”.',['fast','slow','late','weak'],0],['Plural of “child” is:','Plural of “child” is:',['children','childs','childes','childrens'],0],['Choose the correct spelling.','Choose the correctly spelt word.',['necessary','neccessary','necessery','necesary'],0]];eng.forEach(x=>B.push(q(x[0],x[1],x[2],x[3],'English')));return B}
+function bank(){
+const B=[],add=(hi,en,opts,a,s)=>B.push(q(hi,en,opts,a,s));
+const examType=exam;
+for(let i=0;i<75;i++){const a=12+i*3+(mock%3),b=7+(i%17);const op=i%4;if(op===0){const n=a+b;add(a+" + "+b+" = ?","What is "+a+" + "+b+"?",[String(n),String(n+2),String(n-2),String(n+5)],0,"Quantitative Aptitude")}else if(op===1){const n=a-b;add(a+" में से "+b+" घटाने पर क्या मिलेगा?","What is "+a+" - "+b+"?",[String(n),String(n+3),String(n-3),String(n+7)],0,"Quantitative Aptitude")}else if(op===2){const x=3+(i%12),y=4+(i%9),n=x*y;add(x+" × "+y+" = ?","What is "+x+" × "+y+"?",[String(n),String(n+1),String(n-1),String(n+5)],0,"Quantitative Aptitude")}else{const n=5+(i%12),sq=n*n;add(n+" का वर्ग क्या है?","What is the square of "+n+"?",[String(sq),String(sq+n),String(sq-1),String(sq+2*n)],0,"Quantitative Aptitude")}}
+for(let i=0;i<60;i++){const a=4+i,b=a+4,c=b+4,n=c+4;if(i%2===0)add("श्रृंखला "+a+", "+b+", "+c+", ? में अगली संख्या क्या है?","Find the next number: "+a+", "+b+", "+c+", ?",[String(n),String(c+2),String(c+6),String(c+1)],0,"Reasoning");else{const word=["CAT","DOG","BAT","PEN","SUN"][i%5],sh=1+(i%4),out=word.split("").map(ch=>String.fromCharCode(ch.charCodeAt(0)+sh)).join("");add(word+" के प्रत्येक अक्षर में "+sh+" जोड़ने पर कोड क्या होगा?","If each letter of "+word+" is shifted by "+sh+", what is the code?",[out,word,word.split("").reverse().join(""),out.slice(0,-1)],0,"Reasoning")}}
+const gs=[
+["भारत का संविधान कब लागू हुआ?","When did the Constitution of India come into force?",["26 जनवरी 1950","15 अगस्त 1947","26 नवंबर 1949","2 अक्टूबर 1950"],0],
+["भारत का राष्ट्रीय पशु कौन है?","What is the national animal of India?",["बाघ","सिंह","हाथी","मोर"],0],
+["भारत की राजधानी क्या है?","What is the capital of India?",["नई दिल्ली","मुंबई","कोलकाता","चेन्नई"],0],
+["लोकसभा का सामान्य कार्यकाल कितना है?","What is the normal term of the Lok Sabha?",["5 वर्ष","4 वर्ष","6 वर्ष","7 वर्ष"],0],
+["RBI का मुख्यालय कहाँ है?","Where is the headquarters of RBI?",["मुंबई","नई दिल्ली","पटना","कोलकाता"],0],
+["सूर्य के सबसे निकट ग्रह कौन-सा है?","Which planet is closest to the Sun?",["बुध","शुक्र","पृथ्वी","मंगल"],0],
+["जल का रासायनिक सूत्र क्या है?","What is the chemical formula of water?",["H₂O","CO₂","O₂","NaCl"],0],
+["वायुमंडल में सर्वाधिक गैस कौन-सी है?","Which gas is most abundant in Earth's atmosphere?",["नाइट्रोजन","ऑक्सीजन","कार्बन डाइऑक्साइड","हाइड्रोजन"],0],
+["बल की SI इकाई क्या है?","What is the SI unit of force?",["न्यूटन","जूल","वाट","पास्कल"],0],
+["हरित क्रांति मुख्यतः किससे संबंधित है?","The Green Revolution is mainly associated with:",["कृषि उत्पादन","खनन","दूरसंचार","जहाजरानी"],0],
+["भारतीय संसद के दो सदन कौन-से हैं?","What are the two Houses of the Indian Parliament?",["लोकसभा और राज्यसभा","विधानसभा और परिषद","लोकसभा और विधानसभा","राज्यसभा और परिषद"],0],
+["भारत का राष्ट्रीय फूल कौन-सा है?","What is the national flower of India?",["कमल","गुलाब","चमेली","सूरजमुखी"],0],
+["मानव शरीर में रक्त पंप करने वाला अंग कौन-सा है?","Which organ pumps blood in the human body?",["हृदय","फेफड़ा","यकृत","गुर्दा"],0],
+["पृथ्वी का प्राकृतिक उपग्रह कौन है?","What is Earth's natural satellite?",["चंद्रमा","सूर्य","मंगल","शुक्र"],0],
+["पौधों में प्रकाश संश्लेषण मुख्यतः किस अंगक में होता है?","Photosynthesis mainly occurs in which organelle?",["क्लोरोप्लास्ट","नाभिक","राइबोसोम","माइटोकॉन्ड्रिया"],0],
+["भारतीय संविधान की प्रस्तावना में कौन-सा आदर्श है?","Which ideal is stated in the Preamble?",["बंधुता","राजतंत्र","साम्राज्यवाद","उपनिवेशवाद"],0],
+["जल का क्वथनांक सामान्य दाब पर कितना है?","What is the boiling point of water at normal pressure?",["100°C","50°C","0°C","212°C"],0],
+["सौरमंडल का सबसे बड़ा ग्रह कौन है?","Which is the largest planet in the solar system?",["बृहस्पति","शनि","पृथ्वी","मंगल"],0],
+["भारत का राष्ट्रीय पक्षी कौन है?","What is the national bird of India?",["मोर","तोता","कबूतर","हंस"],0],
+["भारत में गणतंत्र दिवस कब मनाया जाता है?","When is Republic Day observed in India?",["26 जनवरी","15 अगस्त","2 अक्टूबर","14 नवंबर"],0]];
+const bihar=[
+["बिहार की राजधानी क्या है?","What is the capital of Bihar?",["पटना","गया","भागलपुर","मुजफ्फरपुर"],0],
+["बिहार दिवस कब मनाया जाता है?","When is Bihar Day observed?",["22 मार्च","15 अगस्त","26 जनवरी","2 अक्टूबर"],0],
+["बोधगया किस जिले में है?","Bodh Gaya is in which district?",["गया","पटना","नालंदा","भोजपुर"],0],
+["नालंदा प्राचीन विश्वविद्यालय किस राज्य में था?","Nalanda ancient university was in which state?",["बिहार","उत्तर प्रदेश","मध्य प्रदेश","राजस्थान"],0],
+["चंपारण सत्याग्रह किससे संबंधित था?","Champaran Satyagraha was related to:",["नील की खेती","नमक उत्पादन","चाय बागान","कपड़ा मिल"],0],
+["पटना का प्राचीन नाम क्या माना जाता है?","What is an ancient name associated with Patna?",["पाटलिपुत्र","इंद्रप्रस्थ","उज्जयिनी","तक्षशिला"],0],
+["वैशाली किस राज्य में स्थित है?","Vaishali is located in which state?",["बिहार","झारखंड","ओडिशा","असम"],0],
+["बिहार का कौन-सा शहर सिल्क के लिए प्रसिद्ध है?","Which Bihar city is famous for silk?",["भागलपुर","सासाराम","बक्सर","अररिया"],0],
+["वाल्मीकि राष्ट्रीय उद्यान बिहार के किस क्षेत्र में है?","Valmiki National Park is in which part of Bihar?",["पश्चिम चंपारण","गया","नालंदा","पूर्णिया"],0],
+["बिहार की प्रमुख नदी कौन-सी है?","Which is a major river of Bihar?",["गंगा","नर्मदा","गोदावरी","कावेरी"],0]];
+const english=[
+["He ___ to school every day.","He ___ to school every day.",["goes","go","going","gone"],0],
+["Choose the antonym of ancient.","Choose the antonym of ancient.",["modern","old","early","past"],0],
+["Choose the synonym of rapid.","Choose the synonym of rapid.",["fast","slow","late","weak"],0],
+["Plural of child is:","Plural of child is:",["children","childs","childes","childrens"],0],
+["Choose the correct spelling.","Choose the correctly spelt word.",["necessary","neccessary","necessery","necesary"],0],
+["She ___ finished her work.","She ___ finished her work.",["has","have","having","had been"],0],
+["Choose the antonym of expand.","Choose the antonym of expand.",["contract","increase","extend","enlarge"],0],
+["A person who writes poems is a:","A person who writes poems is a:",["poet","pilot","painter","player"],0],
+["Choose the correct article: ___ apple.","Choose the correct article: ___ apple.",["an","a","the","no article"],0],
+["Past tense of go is:","Past tense of go is:",["went","gone","goes","going"],0]];
+const addArr=(arr,count,section)=>{for(let i=0;i<count;i++){const x=arr[i%arr.length],tag=i>=arr.length?" "+(i+1):"";add(x[0]+tag,x[1]+tag,x[2],x[3],section)}};
+if(examType==="ssc-chsl"){addArr(english,25,"English");addArr(gs,20,"General Awareness")}
+else if(examType==="ssc-cgl"){addArr(english,20,"English");addArr(gs,25,"General Awareness")}
+else if(examType==="ssc-mts"){addArr(english,15,"English");addArr(gs,30,"General Awareness")}
+else if(examType==="railway-ntpc"){addArr(gs,35,"General Awareness");addArr(english,10,"General Awareness")}
+else if(examType==="railway-groupd"){addArr(gs,35,"General Science");addArr(gs,10,"General Awareness")}
+else if(examType==="bihar-police-constable"){addArr(gs,20,"General Studies");addArr(bihar,30,"Bihar GK")}
+else if(examType==="bihar-police-si"){addArr(gs,20,"General Studies");addArr(bihar,30,"Bihar GK")}
+else {addArr(gs,25,"General Studies");addArr(bihar,25,"Bihar GK")}
+let j=0;while(B.length<300){const a=101+j*2,b=11+(j%23),n=a+b;add("यदि "+a+" में "+b+" जोड़ें, तो परिणाम क्या होगा?","What is "+a+" + "+b+"?",[String(n),String(n+1),String(n-1),String(n+10)],0,"Quantitative Aptitude");j++}
+return B.slice(0,300)}
 let all=bank();
 // Each exam series gets 10 non-overlapping 30-question blocks within this 300-question bank.
 let start=(mock-1)*30;let selected=all.slice(start,start+30);

@@ -219,4 +219,4 @@ localStorage.setItem(key,JSON.stringify(result));let stats=JSON.parse(localStora
 document.getElementById('testView').style.display='none';document.getElementById('result').style.display='block';resultLang=document.getElementById('lang').value;renderResult();
 }
 setInterval(()=>{if(!paused&&!finished&&seconds>0){seconds--;let m=String(Math.floor(seconds/60)).padStart(2,'0'),s=String(seconds%60).padStart(2,'0');document.getElementById('timer').textContent=`${m}:${s}`;if(seconds===0)submitTest()}},1000);render();
-</script></body></html>
+</script><script src="stats.js"></script></body></html>

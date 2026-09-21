@@ -189,7 +189,7 @@ const subjects={
 "bpsc":[["General Studies",gsFacts],["Bihar GK",biharFacts],["Reasoning",reasoning],["Quantitative Aptitude",math]]
 };
 const plan=subjects[examType]||subjects["ssc-chsl"],per=Math.ceil(300/plan.length);
-for(const [s,fn] of plan){if(fn===math)mk(s,per,math);else if(fn===reasoning)mk(s,per,reasoning);else if(fn===english)mk(s,per,english);else addFacts(fn,per,s)}
+for(const [s,fn] of plan){if(fn===math)mk(s,per,math);else if(fn===reasoning)mk(s,per,reasoning);else if(fn===english)mk(s,per,english);else if(fn===science)mk(s,per,science);else addFacts(fn,per,s)}
 const buckets={};B.forEach(x=>(buckets[x.s]||(buckets[x.s]=[])).push(x));
 const out=[];while(out.length<300){for(const k of Object.keys(buckets))if(buckets[k].length)out.push(buckets[k].shift())}
 return out.slice(0,300);

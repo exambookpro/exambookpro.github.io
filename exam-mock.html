@@ -74,6 +74,8 @@ else {addArr(gs,25,"General Studies");addArr(bihar,25,"Bihar GK")}
 let j=0;while(B.length<300){const a=101+j*2,b=11+(j%23),n=a+b;add("यदि "+a+" में "+b+" जोड़ें, तो परिणाम क्या होगा?","What is "+a+" + "+b+"?",[String(n),String(n+1),String(n-1),String(n+10)],0,"Quantitative Aptitude");j++}
 return B.slice(0,300)}
 let all=bank();
+// Interleave subject buckets so every 30-question mock receives a mixture of the available exam-relevant sections.
+const buckets={};all.forEach(x=>(buckets[x.s]||(buckets[x.s]=[])).push(x));const mixed=[];while(mixed.length<all.length){for(const k of Object.keys(buckets)){if(buckets[k].length)mixed.push(buckets[k].shift())}}all=mixed;
 // Each exam series gets 10 non-overlapping 30-question blocks within this 300-question bank.
 let start=(mock-1)*30;let selected=all.slice(start,start+30);
 let answers=Array(30).fill(null),current=0,paused=false,seconds=1800,finished=false,resultScore={correct:0,wrong:0,skip:0};const key=`examAttempt:${exam}:mock${mock}`;

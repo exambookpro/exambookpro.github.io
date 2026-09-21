@@ -16,10 +16,11 @@ function rng(seed){let x=seed>>>0;return()=>{x=(x*1664525+1013904223)>>>0;return
 let qSeq=0;function q(hi,en,opts,a,s){let o=opts.slice(),shift=qSeq++%4;for(let z=0;z<shift;z++)o.push(o.shift());let correct=(a+shift)%o.length,ans=o[correct];let expHi=s==='Quantitative Aptitude'?`गणना करने पर सही उत्तर ${ans} प्राप्त होता है।`:s==='Reasoning'?`दिए गए क्रम/नियम को लागू करने पर सही उत्तर ${ans} प्राप्त होता है।`:`दिए गए प्रश्न के तथ्य/नियम के अनुसार सही उत्तर ${ans} है।`;let expEn=s==='Quantitative Aptitude'?`After calculation, the correct answer is ${ans}.`:s==='Reasoning'?`Applying the given sequence/rule gives ${ans} as the correct answer.`:`According to the fact/rule asked in the question, ${ans} is the correct answer.`;return{hi,en,opts:o,a:correct,s,expHi,expEn}}
 function bank(){
 const B=[],add=(hi,en,opts,a,s)=>B.push(q(hi,en,opts,a,s));
-const examType=exam;
-for(let i=0;i<75;i++){const a=12+i*3+(mock%3),b=7+(i%17);const op=i%4;if(op===0){const n=a+b;add(a+" + "+b+" = ?","What is "+a+" + "+b+"?",[String(n),String(n+2),String(n-2),String(n+5)],0,"Quantitative Aptitude")}else if(op===1){const n=a-b;add(a+" में से "+b+" घटाने पर क्या मिलेगा?","What is "+a+" - "+b+"?",[String(n),String(n+3),String(n-3),String(n+7)],0,"Quantitative Aptitude")}else if(op===2){const x=3+(i%12),y=4+(i%9),n=x*y;add(x+" × "+y+" = ?","What is "+x+" × "+y+"?",[String(n),String(n+1),String(n-1),String(n+5)],0,"Quantitative Aptitude")}else{const n=5+(i%12),sq=n*n;add(n+" का वर्ग क्या है?","What is the square of "+n+"?",[String(sq),String(sq+n),String(sq-1),String(sq+2*n)],0,"Quantitative Aptitude")}}
-for(let i=0;i<60;i++){const a=4+i,b=a+4,c=b+4,n=c+4;if(i%2===0)add("श्रृंखला "+a+", "+b+", "+c+", ? में अगली संख्या क्या है?","Find the next number: "+a+", "+b+", "+c+", ?",[String(n),String(c+2),String(c+6),String(c+1)],0,"Reasoning");else{const words=["CAT","DOG","BAT","PEN","SUN","RED","BOX","MAP","CUP","RAT"],word=words[i%10],sh=1+Math.floor(i/10),out=word.split("").map(ch=>String.fromCharCode(ch.charCodeAt(0)+sh)).join("");add(word+" के प्रत्येक अक्षर में "+sh+" जोड़ने पर कोड क्या होगा?","If each letter of "+word+" is shifted by "+sh+", what is the code?",[out,word,word.split("").reverse().join(""),out.slice(0,-1)],0,"Reasoning")}}
-const gs=[
+const mk=(section,count,fn)=>{for(let i=0;i<count;i++)fn(i)};
+const math=(i)=>{const t=i%5;if(t===0){const a=120+i*3,b=17+i%19,n=a+b;add(a+" + "+b+" = ?","What is "+a+" + "+b+"?",[String(n),String(n+2),String(n-2),String(n+5)],0,"Quantitative Aptitude")}else if(t===1){const a=240+i*4,b=31+i%23,n=a-b;add(a+" में से "+b+" घटाने पर क्या मिलेगा?","What is "+a+" - "+b+"?",[String(n),String(n+3),String(n-3),String(n+7)],0,"Quantitative Aptitude")}else if(t===2){const a=7+i%37,b=8+i%29,n=a*b;add(a+" × "+b+" = ?","What is "+a+" × "+b+"?",[String(n),String(n+1),String(n-1),String(n+5)],0,"Quantitative Aptitude")}else if(t===3){const p=10+(i%30),v=200+i*7,n=v*p/100;add(v+" का "+p+"% कितना है?","What is "+p+"% of "+v+"?",[String(n),String(n+10),String(n-10),String(n+20)],0,"Quantitative Aptitude")}else{const n=15+i%45;add(n+" का वर्ग क्या है?","What is the square of "+n+"?",[String(n*n),String(n*n+n),String(n*n-1),String(n*n+2*n)],0,"Quantitative Aptitude")}};
+const reasoning=(i)=>{const t=i%4;if(t===0){const a=3+i,b=a+7,c=b+11;add("श्रृंखला "+a+", "+b+", "+c+", ? में अगली संख्या क्या है?","Find the next number: "+a+", "+b+", "+c+", ?",[String(c+15),String(c+12),String(c+14),String(c+17)],0,"Reasoning")}else if(t===1){const words=["CAT","DOG","PEN","SUN","MAP","BOX","RAT","CUP","BAT","RED"],w=words[i%words.length],sh=1+(i%5),out=w.split("").map(ch=>String.fromCharCode(ch.charCodeAt(0)+sh)).join("");add(w+" के प्रत्येक अक्षर में "+sh+" जोड़ने पर कोड क्या होगा?","If each letter of "+w+" is shifted by "+sh+", what is the code?",[out,w,w.split("").reverse().join(""),out.slice(0,-1)],0,"Reasoning")}else if(t===2){const n=10+i;add(n+" के बाद आने वाली विषम संख्या कौन-सी है?","Which odd number comes after "+n+"?",[String(n+(n%2===0?1:2)),String(n+2),String(n+3),String(n+4)],0,"Reasoning")}else{const a=2+i%20;add("यदि सभी A को B और सभी B को C से बदला जाए, तो A का नया प्रतीक क्या होगा?","If every A is replaced by B and every B by C, what is the new symbol for A?",["C","A","B","D"],0,"Reasoning")}};
+const english=(i)=>{const bank=[["He ___ to school every day.","He ___ to school every day.",["goes","go","going","gone"],0],["Choose the antonym of ancient.","Choose the antonym of ancient.",["modern","old","early","past"],0],["Choose the synonym of rapid.","Choose the synonym of rapid.",["fast","slow","late","weak"],0],["Plural of child is:","Plural of child is:",["children","childs","childes","childrens"],0],["Choose the correct spelling.","Choose the correctly spelt word.",["necessary","neccessary","necessery","necesary"],0],["She ___ finished her work.","She ___ finished her work.",["has","have","having","had been"],0],["Choose the antonym of expand.","Choose the antonym of expand.",["contract","increase","extend","enlarge"],0],["A person who writes poems is a:","A person who writes poems is a:",["poet","pilot","painter","player"],0],["Choose the correct article: ___ apple.","Choose the correct article: ___ apple.",["an","a","the","no article"],0],["Past tense of go is:","Past tense of go is:",["went","gone","goes","going"],0],["The sun ___ in the east.","The sun ___ in the east.",["rises","rise","rising","rose"],0],["Choose the synonym of begin.","Choose the synonym of begin.",["start","finish","stop","close"],0],["Choose the antonym of victory.","Choose the antonym of victory.",["defeat","success","triumph","win"],0],["Neither Ram nor Shyam ___ present.","Neither Ram nor Shyam ___ present.",["is","are","were","be"],0],["Choose the correct preposition: He is good ___ maths.","Choose the correct preposition: He is good ___ maths.",["at","in","on","for"],0],["The past participle of write is:","The past participle of write is:",["written","wrote","writing","writes"],0],["Choose the synonym of honest.","Choose the synonym of honest.",["truthful","false","clever","angry"],0],["Choose the antonym of scarce.","Choose the antonym of scarce.",["abundant","rare","little","short"],0],["A place where books are kept is a:","A place where books are kept is a:",["library","laboratory","bakery","factory"],0],["Choose the correct spelling.","Choose the correctly spelt word.",["environment","enviroment","envirnment","environmant"],0]];const x=bank[i%bank.length];const n=Math.floor(i/bank.length);if(n===0){add(x[0],x[1],x[2],x[3],"English")}else{const subject=["English","English","English"][n%3];add(x[0]+" (Set "+n+")",x[1]+" (Set "+n+")",x[2],x[3],subject)}};
+const gsFacts=[
 ["भारत का संविधान कब लागू हुआ?","When did the Constitution of India come into force?",["26 जनवरी 1950","15 अगस्त 1947","26 नवंबर 1949","2 अक्टूबर 1950"],0],
 ["भारत का राष्ट्रीय पशु कौन है?","What is the national animal of India?",["बाघ","सिंह","हाथी","मोर"],0],
 ["भारत की राजधानी क्या है?","What is the capital of India?",["नई दिल्ली","मुंबई","कोलकाता","चेन्नई"],0],
@@ -34,45 +35,155 @@ const gs=[
 ["भारत का राष्ट्रीय फूल कौन-सा है?","What is the national flower of India?",["कमल","गुलाब","चमेली","सूरजमुखी"],0],
 ["मानव शरीर में रक्त पंप करने वाला अंग कौन-सा है?","Which organ pumps blood in the human body?",["हृदय","फेफड़ा","यकृत","गुर्दा"],0],
 ["पृथ्वी का प्राकृतिक उपग्रह कौन है?","What is Earth's natural satellite?",["चंद्रमा","सूर्य","मंगल","शुक्र"],0],
-["पौधों में प्रकाश संश्लेषण मुख्यतः किस अंगक में होता है?","Photosynthesis mainly occurs in which organelle?",["क्लोरोप्लास्ट","नाभिक","राइबोसोम","माइटोकॉन्ड्रिया"],0],
+["प्रकाश संश्लेषण मुख्यतः किस अंगक में होता है?","Photosynthesis mainly occurs in which organelle?",["क्लोरोप्लास्ट","नाभिक","राइबोसोम","माइटोकॉन्ड्रिया"],0],
 ["भारतीय संविधान की प्रस्तावना में कौन-सा आदर्श है?","Which ideal is stated in the Preamble?",["बंधुता","राजतंत्र","साम्राज्यवाद","उपनिवेशवाद"],0],
 ["जल का क्वथनांक सामान्य दाब पर कितना है?","What is the boiling point of water at normal pressure?",["100°C","50°C","0°C","212°C"],0],
 ["सौरमंडल का सबसे बड़ा ग्रह कौन है?","Which is the largest planet in the solar system?",["बृहस्पति","शनि","पृथ्वी","मंगल"],0],
 ["भारत का राष्ट्रीय पक्षी कौन है?","What is the national bird of India?",["मोर","तोता","कबूतर","हंस"],0],
-["भारत में गणतंत्र दिवस कब मनाया जाता है?","When is Republic Day observed in India?",["26 जनवरी","15 अगस्त","2 अक्टूबर","14 नवंबर"],0]];
-const bihar=[
+["गणतंत्र दिवस कब मनाया जाता है?","When is Republic Day observed?",["26 जनवरी","15 अगस्त","2 अक्टूबर","14 नवंबर"],0],
+["भारतीय संविधान का संरक्षक किसे माना जाता है?","Which institution is regarded as the guardian of the Constitution?",["सर्वोच्च न्यायालय","संसद","राष्ट्रपति","निर्वाचन आयोग"],0],
+["मौलिक अधिकार संविधान के किस भाग में हैं?","Fundamental Rights are in which Part of the Constitution?",["भाग III","भाग I","भाग IV","भाग V"],0],
+["पंचायती राज को संवैधानिक दर्जा किस संशोधन से मिला?","Which amendment gave constitutional status to Panchayati Raj?",["73वाँ","42वाँ","44वाँ","86वाँ"],0],
+["भारत का सर्वोच्च नागरिक सम्मान कौन-सा है?","What is India's highest civilian award?",["भारत रत्न","पद्म विभूषण","पद्म भूषण","पद्म श्री"],0],
+["सिंधु घाटी सभ्यता का प्रमुख नगर कौन था?","Which was a major city of the Indus Valley Civilization?",["मोहनजोदड़ो","पाटलिपुत्र","कन्नौज","अमरावती"],0],
+["प्लासी का युद्ध किस वर्ष हुआ?","In which year was the Battle of Plassey fought?",["1757","1764","1857","1947"],0],
+["भारत छोड़ो आंदोलन किस वर्ष शुरू हुआ?","In which year did the Quit India Movement begin?",["1942","1930","1919","1947"],0],
+["भारतीय राष्ट्रीय कांग्रेस की स्थापना किस वर्ष हुई?","In which year was the Indian National Congress founded?",["1885","1905","1857","1942"],0],
+["विटामिन C की कमी से कौन-सा रोग होता है?","Deficiency of vitamin C causes which disease?",["स्कर्वी","रिकेट्स","रातांधता","बेरी-बेरी"],0],
+["विटामिन D की कमी से कौन-सा रोग होता है?","Deficiency of vitamin D causes which disease?",["रिकेट्स","स्कर्वी","बेरी-बेरी","एनीमिया"],0],
+["मानव रक्त का सामान्य pH लगभग कितना होता है?","What is the approximate pH of human blood?",["7.4","5.5","9.0","2.0"],0],
+["ध्वनि निर्वात में क्यों नहीं चलती?","Why does sound not travel in vacuum?",["माध्यम आवश्यक है","प्रकाश रोकता है","गुरुत्व नहीं है","तापमान शून्य है"],0],
+["विद्युत धारा की SI इकाई क्या है?","What is the SI unit of electric current?",["एम्पियर","वोल्ट","ओम","वाट"],0],
+["कार्य की SI इकाई क्या है?","What is the SI unit of work?",["जूल","न्यूटन","वाट","पास्कल"],0],
+["ओजोन परत मुख्यतः किस मंडल में है?","The ozone layer is mainly in which atmospheric layer?",["समताप मंडल","क्षोभ मंडल","आयन मंडल","बहिर्मंडल"],0],
+["पृथ्वी का सबसे बड़ा महासागर कौन-सा है?","Which is the largest ocean on Earth?",["प्रशांत महासागर","अटलांटिक","हिंद महासागर","आर्कटिक"],0],
+["भारत में मानसून की वर्षा मुख्यतः किस दिशा से आती है?","The main summer monsoon over India comes from which direction?",["दक्षिण-पश्चिम","उत्तर-पूर्व","दक्षिण-पूर्व","उत्तर-पश्चिम"],0],
+["कर्क रेखा भारत के कितने राज्यों से गुजरती है?","Through how many Indian states does the Tropic of Cancer pass?",["8","6","7","9"],0],
+["नीली क्रांति किससे संबंधित है?","The Blue Revolution is associated with:",["मत्स्य उत्पादन","दुग्ध उत्पादन","कृषि","रेशम उत्पादन"],0],
+["श्वेत क्रांति किससे संबंधित है?","The White Revolution is associated with:",["दुग्ध उत्पादन","मत्स्य उत्पादन","कोयला","तेल"],0],
+["भारतीय रिजर्व बैंक की स्थापना किस वर्ष हुई?","In which year was the Reserve Bank of India established?",["1935","1947","1950","1920"],0],
+["GST भारत में कब लागू हुआ?","When was GST implemented in India?",["1 जुलाई 2017","15 अगस्त 2016","26 जनवरी 2018","1 अप्रैल 2015"],0],
+["नीति आयोग ने किस संस्था का स्थान लिया?","NITI Aayog replaced which institution?",["योजना आयोग","वित्त आयोग","निर्वाचन आयोग","UPSC"],0],
+["भारत का राष्ट्रीय जलीय जीव कौन है?","What is India's national aquatic animal?",["गंगा नदी डॉल्फिन","मगरमच्छ","कछुआ","व्हेल"],0],
+["रामसर स्थल किससे संबंधित हैं?","Ramsar sites are related to:",["आर्द्रभूमि","पर्वत","रेगिस्तान","वन्यजीव अभयारण्य मात्र"],0],
+["किस ग्रह को लाल ग्रह कहा जाता है?","Which planet is called the Red Planet?",["मंगल","बुध","बृहस्पति","शनि"],0],
+["प्रकाश की चाल निर्वात में लगभग कितनी है?","What is the approximate speed of light in vacuum?",["3×10⁸ m/s","3×10⁶ m/s","3×10⁴ m/s","3×10¹⁰ m/s"],0],
+["DNA का पूरा नाम क्या है?","What is the full form of DNA?",["Deoxyribonucleic Acid","Dynamic Nuclear Acid","Deoxygenated Nucleic Acid","Double Nitrogen Acid"],0],
+["मानव शरीर में सबसे बड़ा अंग कौन-सा है?","What is the largest organ in the human body?",["त्वचा","यकृत","हृदय","फेफड़ा"],0],
+["गुरुत्वाकर्षण का नियम किस वैज्ञानिक से जुड़ा है?","The law of gravitation is associated with:",["न्यूटन","आइंस्टीन","डार्विन","फैराडे"],0],
+["पृथ्वी सूर्य की परिक्रमा लगभग कितने समय में करती है?","Earth takes approximately how long to orbit the Sun?",["365¼ दिन","24 घंटे","30 दिन","180 दिन"],0],
+["भारत का सबसे बड़ा राज्य क्षेत्रफल की दृष्टि से कौन है?","Which is India's largest state by area?",["राजस्थान","मध्य प्रदेश","महाराष्ट्र","उत्तर प्रदेश"],0],
+["भारत का सबसे अधिक जनसंख्या वाला राज्य कौन है?","Which Indian state has the largest population?",["उत्तर प्रदेश","महाराष्ट्र","बिहार","पश्चिम बंगाल"],0],
+["संसद का संयुक्त अधिवेशन कौन बुलाता है?","Who summons a joint sitting of Parliament?",["राष्ट्रपति","प्रधानमंत्री","लोकसभा अध्यक्ष","उपराष्ट्रपति"],0],
+["मनी बिल कहाँ प्रस्तुत किया जा सकता है?","Where can a Money Bill be introduced?",["लोकसभा","राज्यसभा","किसी भी सदन में","सर्वोच्च न्यायालय"],0],
+["भारत के राष्ट्रपति का चुनाव कौन करता है?","Who elects the President of India?",["निर्वाचक मंडल","केवल लोकसभा","केवल राज्यसभा","केवल राज्य विधानसभाएँ"],0],
+["लोकसभा की अध्यक्षता कौन करता है?","Who presides over the Lok Sabha?",["लोकसभा अध्यक्ष","राष्ट्रपति","उपराष्ट्रपति","प्रधानमंत्री"],0],
+["भारत में सर्वोच्च न्यायालय की स्थापना कब हुई?","When was the Supreme Court of India established?",["1950","1947","1935","1952"],0],
+["सार्वजनिक क्षेत्र के बैंक का नियमन कौन करता है?","Who regulates banks in India?",["भारतीय रिजर्व बैंक","SEBI","UPSC","NITI Aayog"],0],
+["SEBI का संबंध किस क्षेत्र से है?","SEBI is associated with which sector?",["प्रतिभूति बाजार","रेलवे","कृषि","डाक"],0],
+["भारत का राष्ट्रीय गीत कौन-सा है?","What is India's national song?",["वंदे मातरम्","जन गण मन","सारे जहाँ से अच्छा","ऐ मेरे वतन"],0],
+["भारत का राष्ट्रीय गान कौन-सा है?","What is India's national anthem?",["जन गण मन","वंदे मातरम्","सारे जहाँ से अच्छा","वैष्णव जन"],0],
+["सतत विकास का मुख्य उद्देश्य क्या है?","What is a key aim of sustainable development?",["वर्तमान जरूरतें पूरी करते हुए भविष्य की क्षमता बचाना","केवल औद्योगिक उत्पादन","केवल खनन","केवल शहरीकरण"],0],
+["मृदा अपरदन को कम करने में कौन मदद करता है?","Which helps reduce soil erosion?",["वृक्षारोपण","वनों की कटाई","अतिचराई","ढलान पर जुताई"],0],
+["भूकंप की तीव्रता मापने के लिए कौन-सा पैमाना प्रसिद्ध है?","Which scale is famously used to express earthquake magnitude?",["रिक्टर पैमाना","सेल्सियस","पास्कल","ब्यूफोर्ट"],0],
+["वायुदाब मापने का यंत्र कौन-सा है?","Which instrument measures atmospheric pressure?",["बैरोमीटर","थर्मामीटर","हाइड्रोमीटर","अमीटर"],0],
+["तापमान मापने का यंत्र कौन-सा है?","Which instrument measures temperature?",["थर्मामीटर","बैरोमीटर","एमीटर","वोल्टमीटर"],0],
+["विद्युत प्रतिरोध की SI इकाई क्या है?","What is the SI unit of electrical resistance?",["ओम","वोल्ट","एम्पियर","कूलॉम"],0],
+["शक्ति की SI इकाई क्या है?","What is the SI unit of power?",["वाट","जूल","न्यूटन","पास्कल"],0],
+["आवर्त सारणी में ऑक्सीजन का प्रतीक क्या है?","What is the symbol of oxygen in the periodic table?",["O","Ox","Og","On"],0],
+["साधारण नमक का रासायनिक सूत्र क्या है?","What is the chemical formula of common salt?",["NaCl","HCl","NaOH","KCl"],0],
+["लोहे पर जंग लगना किस प्रकार की प्रक्रिया है?","Rusting of iron is what type of process?",["ऑक्सीकरण","अपचयन","उदासीनीकरण","वाष्पीकरण"],0],
+["पानी का जमाव बिंदु सामान्य दाब पर कितना है?","What is the freezing point of water at normal pressure?",["0°C","100°C","-10°C","10°C"],0]
+];
+const biharFacts=[
 ["बिहार की राजधानी क्या है?","What is the capital of Bihar?",["पटना","गया","भागलपुर","मुजफ्फरपुर"],0],
 ["बिहार दिवस कब मनाया जाता है?","When is Bihar Day observed?",["22 मार्च","15 अगस्त","26 जनवरी","2 अक्टूबर"],0],
 ["बोधगया किस जिले में है?","Bodh Gaya is in which district?",["गया","पटना","नालंदा","भोजपुर"],0],
 ["नालंदा प्राचीन विश्वविद्यालय किस राज्य में था?","Nalanda ancient university was in which state?",["बिहार","उत्तर प्रदेश","मध्य प्रदेश","राजस्थान"],0],
 ["चंपारण सत्याग्रह किससे संबंधित था?","Champaran Satyagraha was related to:",["नील की खेती","नमक उत्पादन","चाय बागान","कपड़ा मिल"],0],
-["पटना का प्राचीन नाम क्या माना जाता है?","What is an ancient name associated with Patna?",["पाटलिपुत्र","इंद्रप्रस्थ","उज्जयिनी","तक्षशिला"],0],
-["वैशाली किस राज्य में स्थित है?","Vaishali is located in which state?",["बिहार","झारखंड","ओडिशा","असम"],0],
+["पटना का प्राचीन नाम क्या था?","What was the ancient name of Patna?",["पाटलिपुत्र","इंद्रप्रस्थ","उज्जयिनी","तक्षशिला"],0],
+["वैशाली किस राज्य में है?","Vaishali is located in which state?",["बिहार","झारखंड","ओडिशा","असम"],0],
 ["बिहार का कौन-सा शहर सिल्क के लिए प्रसिद्ध है?","Which Bihar city is famous for silk?",["भागलपुर","सासाराम","बक्सर","अररिया"],0],
-["वाल्मीकि राष्ट्रीय उद्यान बिहार के किस क्षेत्र में है?","Valmiki National Park is in which part of Bihar?",["पश्चिम चंपारण","गया","नालंदा","पूर्णिया"],0],
-["बिहार की प्रमुख नदी कौन-सी है?","Which is a major river of Bihar?",["गंगा","नर्मदा","गोदावरी","कावेरी"],0]];
-const english=[
-["He ___ to school every day.","He ___ to school every day.",["goes","go","going","gone"],0],
-["Choose the antonym of ancient.","Choose the antonym of ancient.",["modern","old","early","past"],0],
-["Choose the synonym of rapid.","Choose the synonym of rapid.",["fast","slow","late","weak"],0],
-["Plural of child is:","Plural of child is:",["children","childs","childes","childrens"],0],
-["Choose the correct spelling.","Choose the correctly spelt word.",["necessary","neccessary","necessery","necesary"],0],
-["She ___ finished her work.","She ___ finished her work.",["has","have","having","had been"],0],
-["Choose the antonym of expand.","Choose the antonym of expand.",["contract","increase","extend","enlarge"],0],
-["A person who writes poems is a:","A person who writes poems is a:",["poet","pilot","painter","player"],0],
-["Choose the correct article: ___ apple.","Choose the correct article: ___ apple.",["an","a","the","no article"],0],
-["Past tense of go is:","Past tense of go is:",["went","gone","goes","going"],0]];
-const addArr=(arr,count,section)=>{for(let i=0;i<Math.min(count,arr.length);i++){const x=arr[i];add(x[0],x[1],x[2],x[3],section)}};
-if(examType==="ssc-chsl"){addArr(english,25,"English");addArr(gs,20,"General Awareness")}
-else if(examType==="ssc-cgl"){addArr(english,20,"English");addArr(gs,25,"General Awareness")}
-else if(examType==="ssc-mts"){addArr(english,15,"English");addArr(gs,30,"General Awareness")}
-else if(examType==="railway-ntpc"){addArr(gs,35,"General Awareness");addArr(english,10,"General Awareness")}
-else if(examType==="railway-groupd"){addArr(gs,35,"General Science");addArr(gs,10,"General Awareness")}
-else if(examType==="bihar-police-constable"){addArr(gs,20,"General Studies");addArr(bihar,30,"Bihar GK")}
-else if(examType==="bihar-police-si"){addArr(gs,20,"General Studies");addArr(bihar,30,"Bihar GK")}
-else {addArr(gs,25,"General Studies");addArr(bihar,25,"Bihar GK")}
-let j=0;while(B.length<300){const a=101+j*2,b=11+(j%23),n=a+b;add("यदि "+a+" में "+b+" जोड़ें, तो परिणाम क्या होगा?","What is "+a+" + "+b+"?",[String(n),String(n+1),String(n-1),String(n+10)],0,"Quantitative Aptitude");j++}
-return B.slice(0,300)}
+["वाल्मीकि राष्ट्रीय उद्यान किस जिले में है?","Valmiki National Park is in which district?",["पश्चिम चंपारण","गया","नालंदा","पूर्णिया"],0],
+["बिहार की प्रमुख नदी कौन-सी है?","Which is a major river of Bihar?",["गंगा","नर्मदा","गोदावरी","कावेरी"],0],
+["राजगीर किस जिले में है?","Rajgir is in which district?",["नालंदा","गया","पटना","भोजपुर"],0],
+["सासाराम किस महान शासक के मकबरे के लिए प्रसिद्ध है?","Sasaram is famous for the tomb of which ruler?",["शेरशाह सूरी","अशोक","अकबर","समुद्रगुप्त"],0],
+["गोलघर कहाँ स्थित है?","Where is Golghar located?",["पटना","गया","मुजफ्फरपुर","भागलपुर"],0],
+["बिहार में सोन नदी किस बड़ी नदी में मिलती है?","The Son River joins which major river in Bihar?",["गंगा","कोसी","गंडक","पुनपुन"],0],
+["कोसी नदी को किस नाम से भी जाना जाता है?","Kosi River is often called:",["बिहार का शोक","बंगाल का शोक","दक्षिण की गंगा","उत्तर की यमुना"],0],
+["गंडक नदी किस नदी तंत्र का हिस्सा है?","Gandak is part of which river system?",["गंगा","नर्मदा","गोदावरी","कृष्णा"],0],
+["बिहार में बाढ़ की समस्या किस क्षेत्र में अधिक प्रसिद्ध है?","Which region of Bihar is especially known for recurring floods?",["उत्तर बिहार","दक्षिण-पश्चिम बिहार","कैमूर पठार","राजगीर पहाड़ियाँ"],0],
+["महाबोधि मंदिर कहाँ है?","Where is the Mahabodhi Temple?",["बोधगया","राजगीर","वैशाली","पटना"],0],
+["महावीर का निर्वाण स्थल पावापुरी किस राज्य में है?","Pawapuri, associated with Mahavira's nirvana, is in which state?",["बिहार","उत्तर प्रदेश","झारखंड","ओडिशा"],0],
+["गुरु गोबिंद सिंह का जन्मस्थान पटना में किस नाम से प्रसिद्ध है?","Guru Gobind Singh's birthplace in Patna is known as:",["तख्त श्री पटना साहिब","गोलघर","अगम कुआँ","कुम्हरार"],0],
+["कुम्हरार पुरातात्विक स्थल किस शहर में है?","Kumhrar archaeological site is in which city?",["पटना","गया","सासाराम","दरभंगा"],0],
+["शेरशाह सूरी का मकबरा कहाँ है?","Where is Sher Shah Suri's tomb?",["सासाराम","पटना","बक्सर","आरा"],0],
+["बिहार का प्रमुख लोकनृत्य कौन-सा है?","Which is a well-known folk dance of Bihar?",["जट-जटिन","गरबा","भांगड़ा","घूमर"],0],
+["मधुबनी चित्रकला किस क्षेत्र से जुड़ी है?","Madhubani painting is associated with which region?",["मिथिला","मगध","भोजपुर","अंग"],0],
+["छठ पूजा में मुख्य अर्घ्य किसे दिया जाता है?","In Chhath Puja, the main arghya is offered to:",["सूर्य देव","अग्नि देव","इंद्र देव","वरुण देव"],0],
+["सोनपुर मेला किस जिले के क्षेत्र से जुड़ा है?","Sonepur fair is associated with which area?",["सारण","गया","अररिया","रोहतास"],0],
+["बिहार का प्राचीन मगध क्षेत्र किस शहर से प्रमुख रूप से जुड़ा है?","Ancient Magadha is strongly associated with which city?",["राजगीर","भागलपुर","पूर्णिया","बेतिया"],0],
+["पाटलिपुत्र किस साम्राज्य की प्रमुख राजधानी रहा?","Pataliputra was a major capital of which empire?",["मौर्य","चोल","चेर","सातवाहन"],0],
+["चंद्रगुप्त मौर्य के गुरु कौन थे?","Who was the adviser/teacher associated with Chandragupta Maurya?",["चाणक्य","कालिदास","आर्यभट्ट","वराहमिहिर"],0],
+["आर्यभट्ट का संबंध बिहार के किस प्राचीन नगर से जोड़ा जाता है?","Aryabhata is traditionally associated with which ancient city in Bihar?",["कुसुमपुर/पाटलिपुत्र","वैशाली","बोधगया","सासाराम"],0],
+["बिहार के किस शहर का नाम प्राचीन विक्रमशिला विश्वविद्यालय से जुड़ा है?","Which Bihar district is associated with ancient Vikramashila?",["भागलपुर","पटना","गया","सारण"],0],
+["विक्रमशिला विश्वविद्यालय की स्थापना किस पाल शासक से जोड़ी जाती है?","Vikramashila University is associated with which Pala ruler?",["धर्मपाल","हर्षवर्धन","अशोक","कुमारगुप्त"],0],
+["नालंदा विश्वविद्यालय को किस प्राचीन शासक के संरक्षण से जोड़ा जाता है?","Nalanda University is associated with the patronage of which ancient ruler?",["कुमारगुप्त प्रथम","समुद्रगुप्त","शेरशाह","बिंबिसार"],0],
+["बिहार के किस नगर को तसर/रेशम उद्योग से भी जोड़ा जाता है?","Which Bihar city is associated with silk production?",["भागलपुर","बक्सर","सीवान","जहानाबाद"],0],
+["मुजफ्फरपुर किस फल के लिए प्रसिद्ध है?","Muzaffarpur is famous for which fruit?",["लीची","सेब","केसर","नारियल"],0],
+["दरभंगा क्षेत्र किस सांस्कृतिक परंपरा से जुड़ा है?","Darbhanga region is strongly associated with which cultural tradition?",["मिथिला","मालवा","कच्छ","कोंकण"],0],
+["बिहार की आधिकारिक भाषा के साथ व्यापक रूप से बोली जाने वाली भाषा कौन-सी है?","Which language is widely spoken in Bihar along with Hindi?",["मैथिली","मराठी","तमिल","कन्नड़"],0],
+["बिहार में किस नदी पर फरक्का के कारण जल-प्रवाह संबंधी प्रभाव की चर्चा होती है?","Which river in Bihar is affected by downstream flow conditions around Farakka?",["गंगा","नर्मदा","कावेरी","ताप्ती"],0],
+["बिहार की सीमा किन देशों में से किससे लगती है?","Bihar shares an international border with which country?",["नेपाल","भूटान","बांग्लादेश","म्यांमार"],0],
+["बिहार के उत्तर में कौन-सा देश है?","Which country lies to the north of Bihar?",["नेपाल","भूटान","बांग्लादेश","श्रीलंका"],0],
+["बिहार का दक्षिणी पड़ोसी राज्य कौन-सा है?","Which state lies to the south of Bihar?",["झारखंड","पंजाब","असम","हरियाणा"],0],
+["बिहार का पश्चिमी पड़ोसी राज्य कौन-सा है?","Which state lies to the west of Bihar?",["उत्तर प्रदेश","ओडिशा","पश्चिम बंगाल","सिक्किम"],0],
+["बिहार का पूर्वी पड़ोसी राज्य कौन-सा है?","Which state lies to the east of Bihar?",["पश्चिम बंगाल","राजस्थान","गुजरात","छत्तीसगढ़"],0],
+["बिहार के किस क्षेत्र में मगही भाषा का प्रभाव अधिक है?","Magahi has a strong traditional presence in which broad region?",["मगध","मिथिला","सीमांचल","कोसी"],0],
+["भोजपुरी का प्रमुख सांस्कृतिक क्षेत्र बिहार के किस भाग से जुड़ा है?","Bhojpuri is strongly associated with which broad part of Bihar?",["पश्चिमी बिहार","पूर्वी बिहार","उत्तर-पूर्वी बिहार","दक्षिण-पूर्वी बिहार"],0],
+["मिथिला क्षेत्र की प्रमुख भाषा कौन-सी है?","What is the major language of the Mithila region?",["मैथिली","भोजपुरी","मराठी","पंजाबी"],0],
+["अंग क्षेत्र की सांस्कृतिक पहचान किस शहर से विशेष रूप से जुड़ी है?","Anga's cultural identity is especially associated with which city?",["भागलपुर","पटना","बक्सर","गया"],0],
+["चंपारण क्षेत्र बिहार के किस भाग में है?","Champaran is in which part of Bihar?",["उत्तर-पश्चिम","दक्षिण-पूर्व","मध्य-दक्षिण","दक्षिण-पश्चिम"],0],
+["बिहार के किस जिले में केसरिया स्तूप स्थित है?","Kesaria Stupa is in which Bihar district?",["पूर्वी चंपारण","गया","नालंदा","रोहतास"],0],
+["राजगीर का प्राचीन नाम किससे संबंधित है?","Rajgir is associated with which ancient name?",["राजगृह","इंद्रप्रस्थ","कौशांबी","उज्जैन"],0],
+["वैशाली प्राचीन काल में किस गणराज्य से जुड़ी थी?","Vaishali was associated with which ancient republican polity?",["वज्जि संघ","मौर्य साम्राज्य","चोल राज्य","कुषाण साम्राज्य"],0],
+["बोधगया किस धर्म के लिए प्रमुख तीर्थ है?","Bodh Gaya is a major pilgrimage site for which religion?",["बौद्ध धर्म","सिख धर्म","जैन धर्म","पारसी धर्म"],0],
+["पावापुरी किस धर्म से विशेष रूप से जुड़ा तीर्थ है?","Pawapuri is especially associated with which religion?",["जैन धर्म","बौद्ध धर्म","सिख धर्म","यहूदी धर्म"],0],
+["पटना साहिब किस धर्म का प्रमुख तीर्थ है?","Patna Sahib is a major pilgrimage site of which religion?",["सिख धर्म","बौद्ध धर्म","जैन धर्म","पारसी धर्म"],0],
+["बिहार में किस पर्व पर उगते और डूबते सूर्य को अर्घ्य दिया जाता है?","During which festival are arghyas offered to the rising and setting Sun in Bihar?",["छठ","होली","दीपावली","ईद"],0],
+["बिहार की प्रसिद्ध शाही लीची मुख्यतः किस क्षेत्र से जुड़ी है?","Bihar's famous Shahi litchi is mainly associated with which area?",["मुजफ्फरपुर","रोहतास","बक्सर","कैमूर"],0],
+["बिहार का कौन-सा क्षेत्र मखाना उत्पादन के लिए प्रसिद्ध है?","Which Bihar region is well known for makhana production?",["मिथिला/उत्तर बिहार","कैमूर","रोहतास","दक्षिण मगध"],0],
+["गंगा नदी बिहार में किस दिशा में सामान्यतः बहती है?","In Bihar, the Ganga generally flows in which broad direction?",["पश्चिम से पूर्व","उत्तर से दक्षिण","पूर्व से पश्चिम","दक्षिण से उत्तर"],0],
+["बिहार का प्रमुख राष्ट्रीय उद्यान कौन-सा है?","What is the major national park of Bihar?",["वाल्मीकि राष्ट्रीय उद्यान","कान्हा राष्ट्रीय उद्यान","काजीरंगा","रणथंभौर"],0],
+["वाल्मीकि टाइगर रिजर्व किस जिले में है?","Valmiki Tiger Reserve is in which district?",["पश्चिम चंपारण","गया","नालंदा","जमुई"],0],
+["बिहार का एक प्रमुख बौद्ध स्थल कौन-सा है?","Which is a major Buddhist site in Bihar?",["बोधगया","सासाराम","सोनपुर","मुजफ्फरपुर"],0],
+["बिहार में प्रसिद्ध बराबर गुफाएँ किस जिले में हैं?","The famous Barabar Caves are in which district?",["जहानाबाद","गया","पटना","सारण"],0],
+["बिहार में महाबोधि मंदिर किस स्थान पर है?","At which place in Bihar is the Mahabodhi Temple?",["बोधगया","वैशाली","पावापुरी","राजगीर"],0],
+["बिहार का कौन-सा शहर प्राचीन शिक्षा केंद्र के रूप में प्रसिद्ध है?","Which Bihar place is famous as an ancient centre of learning?",["नालंदा","बक्सर","सीवान","बेतिया"],0],
+["चंपारण सत्याग्रह का नेतृत्व किसने किया?","Who led the Champaran Satyagraha?",["महात्मा गांधी","सुभाष चंद्र बोस","बाल गंगाधर तिलक","सरदार पटेल"],0],
+["बिहार में गांधीजी का पहला सत्याग्रह किस आंदोलन से जुड़ा था?","Gandhi's first satyagraha in India is associated with which movement in Bihar?",["चंपारण सत्याग्रह","खेड़ा सत्याग्रह","अहमदाबाद मिल आंदोलन","दांडी मार्च"],0],
+["जयप्रकाश नारायण का जन्म किस राज्य में हुआ था?","In which state was Jayaprakash Narayan born?",["बिहार","उत्तर प्रदेश","मध्य प्रदेश","राजस्थान"],0],
+["डॉ. राजेंद्र प्रसाद का जन्मस्थान किस राज्य में था?","In which state was Dr. Rajendra Prasad born?",["बिहार","गुजरात","महाराष्ट्र","उत्तर प्रदेश"],0],
+["बिहार से जुड़े प्रथम राष्ट्रपति कौन थे?","Who was the first President of India associated with Bihar?",["डॉ. राजेंद्र प्रसाद","डॉ. सर्वपल्ली राधाकृष्णन","डॉ. जाकिर हुसैन","वी.वी. गिरि"],0]
+];
+const addFacts=(arr,count,section)=>{for(let i=0;i<count;i++){const x=arr[i%arr.length];const set=Math.floor(i/arr.length);add(set?x[0]+" (प्रश्न सेट "+(set+1)+")":x[0],set?x[1]+" (Set "+(set+1)+")":x[1],x[2],x[4]??x[3],section)}};
+const subjects={
+"ssc-chsl":[["English",english],["Quantitative Aptitude",math],["Reasoning",reasoning],["General Awareness",gsFacts]],
+"ssc-cgl":[["English",english],["Quantitative Aptitude",math],["Reasoning",reasoning],["General Awareness",gsFacts]],
+"ssc-mts":[["English",english],["Quantitative Aptitude",math],["Reasoning",reasoning],["General Awareness",gsFacts]],
+"railway-ntpc":[["Quantitative Aptitude",math],["Reasoning",reasoning],["General Awareness",gsFacts],["General Science",gsFacts]],
+"railway-groupd":[["Quantitative Aptitude",math],["Reasoning",reasoning],["General Science",gsFacts],["General Awareness",gsFacts]],
+"bihar-police-constable":[["General Studies",gsFacts],["Bihar GK",biharFacts],["Quantitative Aptitude",math],["Reasoning",reasoning]],
+"bihar-police-si":[["General Studies",gsFacts],["Bihar GK",biharFacts],["Quantitative Aptitude",math],["Reasoning",reasoning]],
+"bihar-police-si":[["General Studies",gsFacts],["Bihar GK",biharFacts],["Quantitative Aptitude",math],["Reasoning",reasoning]],
+"bpsc":[["General Studies",gsFacts],["Bihar GK",biharFacts],["Reasoning",reasoning],["Quantitative Aptitude",math]]
+};
+const plan=subjects[examType]||subjects["ssc-chsl"],per=Math.ceil(300/plan.length);
+for(const [s,fn] of plan){if(fn===math)mk(s,per,math);else if(fn===reasoning)mk(s,per,reasoning);else if(fn===english)mk(s,per,english);else addFacts(fn,per,s)}
+const buckets={};B.forEach(x=>(buckets[x.s]||(buckets[x.s]=[])).push(x));
+const out=[];while(out.length<300){for(const k of Object.keys(buckets))if(buckets[k].length)out.push(buckets[k].shift())}
+return out.slice(0,300);
+}
 let all=bank();
 // Interleave subject buckets so every 30-question mock receives a mixture of the available exam-relevant sections.
 const buckets={};all.forEach(x=>(buckets[x.s]||(buckets[x.s]=[])).push(x));const mixed=[];while(mixed.length<all.length){for(const k of Object.keys(buckets)){if(buckets[k].length)mixed.push(buckets[k].shift())}}all=mixed;

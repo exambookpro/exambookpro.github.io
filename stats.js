@@ -4,7 +4,7 @@ function saveResult(){
     var s=JSON.parse(localStorage.getItem('examStats')||'{}');
     s.attempted=(s.attempted||0)+1;
     var text=document.body.innerText||'';
-    var m=text.match(/(?:Score|स्कोर|Marks|अंक)\s*[:：]?\s*(\d+(?:\.\d+)?)\s*(?:\/\s*(\d+))?/i);
+    var m=text.match(/(?:Score|स्कोर|Marks|अंक)\s*[:：]?\s*(\d+(?:\.\d+)?)\s*(?:\/\s*(\d+))?/i) || text.match(/(?:^|\s)(\d+(?:\.\d+)?)\s*\/\s*(\d+)(?:\s|$)/);
     if(m){var score=Number(m[1]);s.totalScore=(s.totalScore||0)+score;s.bestScore=Math.max(s.bestScore||0,score)}
     s.history=Array.isArray(s.history)?s.history:[];
     s.history.unshift({title:document.title,date:new Date().toISOString(),score:m?Number(m[1]):0});

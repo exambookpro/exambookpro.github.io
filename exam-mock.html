@@ -62,7 +62,7 @@ const english=[
 ["A person who writes poems is a:","A person who writes poems is a:",["poet","pilot","painter","player"],0],
 ["Choose the correct article: ___ apple.","Choose the correct article: ___ apple.",["an","a","the","no article"],0],
 ["Past tense of go is:","Past tense of go is:",["went","gone","goes","going"],0]];
-const addArr=(arr,count,section)=>{for(let i=0;i<count;i++){const x=arr[i%arr.length],tag=i>=arr.length?" "+(i+1):"";add(x[0]+tag,x[1]+tag,x[2],x[3],section)}};
+const addArr=(arr,count,section)=>{for(let i=0;i<Math.min(count,arr.length);i++){const x=arr[i];add(x[0],x[1],x[2],x[3],section)}};
 if(examType==="ssc-chsl"){addArr(english,25,"English");addArr(gs,20,"General Awareness")}
 else if(examType==="ssc-cgl"){addArr(english,20,"English");addArr(gs,25,"General Awareness")}
 else if(examType==="ssc-mts"){addArr(english,15,"English");addArr(gs,30,"General Awareness")}

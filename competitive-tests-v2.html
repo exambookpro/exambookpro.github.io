@@ -13,8 +13,8 @@ let current=null,questions=[],answers=[],idx=0,time=0,timerId=null,paused=false,
 const filters=['All','SSC','Railway','Bihar'];document.getElementById('filters').innerHTML=filters.map((x,i)=>`<button class="filter ${i?'':'active'}" onclick="filterExam('${x}',this)">${x}</button>`).join('');
 function rng(n){let x=Math.sin(n*12.9898+78.233)*43758.5453;return x-Math.floor(x)}
 function pick(a,n){return a[Math.floor(rng(n)*a.length)]}
-function opts(correct,arr){let o=[correct,...arr.filter(x=>x!==correct).slice(0,3)];return o.sort(()=>rng(seed+o.indexOf(correct)+o.length)-.5)}
-function q(topic,hi,en,options,ans){return {topic,hi,en,options,a:ans}}
+function opts(correct,arr){let key=String(correct),o=[correct,...arr.filter(x=>String(x)!==key).slice(0,3)];o.sort(()=>rng(seed+o.length+String(correct).length)-.5);o._correctIndex=o.findIndex(x=>String(x)===key);return o}
+function q(topic,hi,en,options,ans){return {topic,hi,en,options,a:Number.isInteger(options._correctIndex)?options._correctIndex:ans}}
 function buildQuestion(ex,m,k){let n=m*100+k+seed;let topic=pick(ex.topics,n);let a,b,c,correct,os;
 if(topic==='Quant'||topic==='Maths'||topic==='Numerical Ability'){a=18+Math.floor(rng(n)*70);b=7+Math.floor(rng(n+1)*35);c=2+Math.floor(rng(n+2)*9);if(k%4===0){correct=(a*b+c);return q(topic,`एक दुकानदार किसी वस्तु का अंकित मूल्य ₹${a*10} रखकर ${b}% छूट देता है। बिक्री मूल्य क्या होगा?`,`A shopkeeper marks an item at ₹${a*10} and gives ${b}% discount. What is the selling price?`,opts(a*10*(100-b)/100,[a*10*(100-b)/100+10,a*10*(100-b)/100-10,a*10*(100+b)/100],n),0)}correct=a*b+c;return q(topic,`${a} × ${b} + ${c} = ?`,`What is ${a} × ${b} + ${c}?`,opts(String(correct),[String(correct+b),String(correct-c),String(a*(b+c))],n),0)}
 if(topic==='Reasoning'){let step=3+Math.floor(rng(n)*12),start=11+Math.floor(rng(n+1)*30);correct=start+step*3;return q(topic,`${start}, ${start+step}, ${start+2*step}, ? में अगली संख्या क्या होगी?`,`Find the next number: ${start}, ${start+step}, ${start+2*step}, ?`,opts(String(correct),[String(correct+step),String(correct-step),String(start+step*4)],n),0)}

@@ -26,7 +26,7 @@
 <section class="hero">
 <h1>Gaurav Special Science Test</h1>
 <p><b>Subject → Chapter → Test</b></p>
-<p>Biology • Chapter 1: Nutrition • 10 Tests • 30 Questions प्रत्येक</p>
+<p>Biology • Chapter 1: Nutrition • 10 Tests • 28 Questions प्रत्येक</p>
 </section>
 <div id="app"></div>
 <section class="hero" style="margin-top:18px"><h2>Biology Nutrition Test Series</h2><p>इस series का उद्देश्य Biology के Nutrition chapter की नियमित practice कराना है। हर उपलब्ध test में objective questions के माध्यम से concept recall और exam practice की जा सकती है।</p><p><b>Suggested practice:</b> एक test attempt करें, गलत answers note करें और फिर उसी topic को revise करके अगला test दें।</p></section></main>
@@ -39,7 +39,7 @@ let tests=[];
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 function shell(title,back,label,body){app.innerHTML='<section><div class="navline">'+(back?'<button class="back" onclick="'+back+'">← Back</button>':'<button class="back" onclick="location.href=\'index.html\'">← Home</button>')+'<span>'+esc(label)+'</span></div><h2>'+esc(title)+'</h2>'+body+'</section>'}
 function subjects(){shell('1. Subject चुनें','', 'Gaurav Special Science Test','<div class="grid"><button class="card" onclick="chapters()" style="border:1px solid #dbe3ef;text-align:left"><div class="no">1</div><h3>🧬 Biology</h3><div class="meta">Chapter 1: Nutrition</div></button></div>')}
-function chapters(){shell('2. Biology — Chapters','subjects()','🧬 Biology','<div class="grid"><button class="card" onclick="showTests()" style="border:1px solid #dbe3ef;text-align:left"><div class="no">1</div><h3>Chapter 1: Nutrition</h3><div class="meta">10 Tests • 30 Questions each</div></button></div>')}
+function chapters(){shell('2. Biology — Chapters','subjects()','🧬 Biology','<div class="grid"><button class="card" onclick="showTests()" style="border:1px solid #dbe3ef;text-align:left"><div class="no">1</div><h3>Chapter 1: Nutrition</h3><div class="meta">10 Tests • 28 Questions each</div></button></div>')}
 function showTests(){
  shell('3. Chapter 1: Nutrition — Tests','chapters()','🧬 Biology','<div id="status" class="note">Tests load हो रहे हैं…</div><div id="testsGrid" class="grid"></div>');
  loadTests();

@@ -10,7 +10,7 @@
       const {data,error}=await client.functions.invoke('submit-verified-result',{body:{test_id:Number(testId),answers:answers||{},time_used_seconds:Number(timeUsedSeconds)||0}});
       if(error) throw error;
       if(!data||!data.ok||!data.result) throw new Error((data&&data.error)||'Verified result submission failed');
-      return Object.assign({},data.result,{review:Array.isArray(data.review)?data.review:[],scoring:data.scoring||{marks_per_correct:1,negative_per_wrong:0,max_score:data.result.total_questions}});
+      return Object.assign({},data.result,{review:Array.isArray(data.review)?data.review:[],section_performance:Array.isArray(data.section_performance)?data.section_performance:[],scoring:data.scoring||{marks_per_correct:1,negative_per_wrong:0,max_score:data.result.total_questions}});
     }
   };
 })();

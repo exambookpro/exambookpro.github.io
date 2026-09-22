@@ -11,6 +11,7 @@ const SERIES=[
 ['bpsc-cce','🏛️','BPSC CCE Prelims','BPSC • Combined Competitive Exam','General Studies • History • Geography • Polity • Science • Bihar'],
 ];
 const filters=[['all','All Exams'],...SERIES.map(x=>[x[0],x[2]])];document.getElementById('filters').innerHTML=filters.map((f,i)=>`<button class="filter ${i===0?'active':''}" onclick="show('${f[0]}',this)">${f[1]}</button>`).join('');
+function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 function card(s,n){return `<article class="card" data-series="${s[0]}"><div class="icon">${s[1]}</div><h3>${s[2]} — Mock Test ${n}</h3><div class="meta">30 Questions • 30 Marks<br>${s[4]}<br>English + Hindi</div><a class="start" href="exam-mock.html?exam=${encodeURIComponent(s[0])}&mock=${n}">Start Test</a></article>`}
 function render(filter='all'){document.getElementById('groups').innerHTML=SERIES.filter(s=>filter==='all'||s[0]===filter).map(s=>`<section class="group"><h2>${s[1]} ${s[2]} <span style="font-size:12px;color:#64748b">• 10 Mock Tests</span></h2><div class="grid">${Array.from({length:10},(_,i)=>card(s,i+1)).join('')}</div></section>`).join('')}
 function show(f,b){document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');render(f);document.getElementById('dbGroups').style.display=f==='all'?'block':'none'}render();

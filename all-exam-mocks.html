@@ -17,15 +17,18 @@ function show(f,b){document.querySelectorAll('.filter').forEach(x=>x.classList.r
 const SUPABASE_URL="https://abgigsjhdvsqehgdhbym.supabase.co",SUPABASE_KEY="sb_publishable_GGcJmjwLXRrYsX8-sYph_g_Gt-0riU_",sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 async function loadDatabaseTests(){
  const box=document.getElementById('dbGroups');
- const {data,error}=await sb.from('tests').select('id,title,exam,description,duration_minutes,marks_per_correct,negative_per_wrong').order('id');
- if(error||!data){box.innerHTML='<section class="group"><h2>☁️ Database Tests</h2><div class="note">Database tests load नहीं हो पाए।</div></section>';return}
- const groups={};
- data.forEach(t=>{const key=t.exam||'Other';(groups[key]??=[]).push(t)});
- box.innerHTML='<section class="group"><h2>☁️ Admin / Verified Database Tests</h2><p class="muted">ये tests सीधे database से load होते हैं। हर test में उपलब्ध वास्तविक questions के अनुसार count दिखाया गया है।</p><div class="grid">'+data.map(t=>{
-   const icon=t.exam.includes('Biology')?'🧬':t.exam.includes('Chemistry')?'⚗️':t.exam.includes('Physics')?'⚡':t.exam.includes('CTET')?'🎓':t.exam.includes('SSC')?'📝':'📚';
-   const qlabel=t.id===5?'150 Questions':t.id===6?'100 Questions':t.id===1?'51 Questions':t.id===4||t.id===7?'50 Questions':'Questions';
-   return '<article class="card"><div class="icon">'+icon+'</div><h3>'+esc(t.exam)+' — '+esc(t.title)+'</h3><div class="meta">'+qlabel+' • '+(t.duration_minutes||30)+' Minutes<br>+'+(t.marks_per_correct??1)+' / −'+(t.negative_per_wrong??0)+'<br>'+esc(t.description||'Database test')+'</div><a class="start" href="verified-test.html?test='+t.id+'">Start Test</a></article>';
- }).join('')+'</div></section>';
+ const {data,error}=await sb.from('tests').select('id,title,exam,description,duration_minutes,marks_per_correct,negative_per_wrong').like('exam','Bihar Board Class 10 Science%').order('id');
+ if(error||!data){box.innerHTML='<section class="group"><h2>📚 Class 10 Bihar Special</h2><div class="note">Database tests load नहीं हो पाए।</div></section>';return}
+ const order=['Chemistry','Biology','Physics'];
+ const labels={Chemistry:'⚗️ Chemistry',Biology:'🧬 Biology',Physics:'⚡ Physics'};
+ box.innerHTML='<section class="group"><h2>📚 Class 10 Bihar Special — Science</h2><p class="muted">Chemistry, Biology और Physics अलग-अलग हैं। हर chapter का Test 1 अभी 50 verified practice questions का है; आगे bank बढ़ने पर उसी chapter के Test 2, Test 3… अलग बनेंगे।</p>'+order.map(sub=>{
+   const arr=data.filter(t=>t.exam.endsWith('— '+sub));
+   if(!arr.length)return '';
+   return '<section class="group"><h2>'+labels[sub]+' <span style="font-size:12px;color:#64748b">• '+arr.length+' Chapters</span></h2><div class="grid">'+arr.map(t=>{
+     const icon=sub==='Biology'?'🧬':sub==='Chemistry'?'⚗️':'⚡';
+     return '<article class="card"><div class="icon">'+icon+'</div><h3>'+esc(t.title)+'</h3><div class="meta">50 Questions • '+(t.duration_minutes||30)+' Minutes<br>+'+(t.marks_per_correct??1)+' / −'+(t.negative_per_wrong??0)+'<br>'+esc(t.description||'Chapter-wise test')+'</div><a class="start" href="verified-test.html?test='+t.id+'">Start Test</a></article>';
+   }).join('')+'</div></section>';
+ }).join('')+'</section>';
 }
 loadDatabaseTests();
 </script></body></html>

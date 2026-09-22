@@ -29,7 +29,12 @@
 <p>Biology • Chapter 1: Nutrition • 10 Tests • 30 Questions प्रत्येक</p>
 </section>
 <div id="app"></div>
-<section class="hero" style="margin-top:18px"><h2>Biology Nutrition Test Series</h2><p>इस series का उद्देश्य Biology के Nutrition chapter की नियमित practice कराना है। हर उपलब्ध test में objective questions के माध्यम से concept recall और exam practice की जा सकती है।</p><p><b>Suggested practice:</b> एक test attempt करें, गलत answers note करें और फिर उसी topic को revise करके अगला test दें।</p></section></main>
+<section class="hero" style="margin-top:18px"><h2>Biology Nutrition Test Series</h2><p>इस series का उद्देश्य Biology के Nutrition chapter की नियमित practice कराना है। हर उपलब्ध test में objective questions के माध्यम से concept recall और exam practice की जा सकती है।</p><p><b>Suggested practice:</b> एक test attempt करें, गलत answers note करें और फिर उसी topic को revise करके अगला test दें।</p></section>
+<section class="hero" style="margin-top:18px">
+<h2>📄 PDF से जोड़े गए Questions — Options + Answers</h2>
+<p>नीचे PDF से सीधे जोड़े गए 20 source-based questions दिखेंगे। हर question में 4 options और सही answer दिया गया है।</p>
+<div id="pdfQuestions" class="grid"><div class="note">Questions load हो रहे हैं…</div></div>
+</section></main>
 <script>
 const SUPABASE_URL="https://abgigsjhdvsqehgdhbym.supabase.co";
 const SUPABASE_KEY="sb_publishable_GGcJmjwLXRrYsX8-sYph_g_Gt-0riU_";
@@ -40,6 +45,23 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&
 function shell(title,back,label,body){app.innerHTML='<section><div class="navline">'+(back?'<button class="back" onclick="'+back+'">← Back</button>':'<button class="back" onclick="location.href=\'index.html\'">← Home</button>')+'<span>'+esc(label)+'</span></div><h2>'+esc(title)+'</h2>'+body+'</section>'}
 function subjects(){shell('1. Subject चुनें','', 'Gaurav Special Science Test','<div class="grid"><button class="card" onclick="chapters()" style="border:1px solid #dbe3ef;text-align:left"><div class="no">1</div><h3>🧬 Biology</h3><div class="meta">Chapter 1: Nutrition</div></button></div>')}
 function chapters(){shell('2. Biology — Chapters','subjects()','🧬 Biology','<div class="grid"><button class="card" onclick="showTests()" style="border:1px solid #dbe3ef;text-align:left"><div class="no">1</div><h3>Chapter 1: Nutrition</h3><div class="meta">10 Tests • 30 Questions each</div></button></div>')}
+async function loadPdfQuestions(){
+ const ids=Array.from({length:20},(_,i)=>2919+i);
+ const {data,error}=await sb.from('questions').select('id,question_hi,question_en,option_a_hi,option_a_en,option_b_hi,option_b_en,option_c_hi,option_c_en,option_d_hi,option_d_en,correct_answer').in('id',ids).order('id',{ascending:true});
+ const box=document.getElementById('pdfQuestions');
+ if(error||!data?.length){box.innerHTML='<div class="note">PDF questions अभी load नहीं हो पाए। Refresh करके फिर देखें।</div>';return}
+ box.innerHTML=data.map((q,n)=>{
+   const opts=[
+    q.option_a_hi||q.option_a_en,
+    q.option_b_hi||q.option_b_en,
+    q.option_c_hi||q.option_c_en,
+    q.option_d_hi||q.option_d_en
+   ];
+   return '<article class="card" style="grid-column:1/-1"><h3>Q'+(n+1)+'. '+esc(q.question_hi||q.question_en)+'</h3>'+
+    opts.map((o,j)=>'<div class="opt" style="cursor:default">'+String.fromCharCode(65+j)+'. '+esc(o)+'</div>').join('')+
+    '<div style="margin-top:10px;padding:10px;border-radius:9px;background:#ecfdf5;border:1px solid #bbf7d0;color:#166534;font-weight:900">✅ सही Answer: '+String.fromCharCode(65+q.correct_answer)+'. '+esc(opts[q.correct_answer])+'</div></article>';
+ }).join('');
+}
 function showTests(){
  shell('3. Chapter 1: Nutrition — Tests','chapters()','🧬 Biology','<div id="status" class="note">Tests load हो रहे हैं…</div><div id="testsGrid" class="grid"></div>');
  loadTests();
@@ -57,5 +79,6 @@ async function loadTests(){
  }).join(''):'<div class="note">इस chapter के tests अभी उपलब्ध नहीं हैं।</div>';
 }
 subjects();
+loadPdfQuestions();
 </script>
 </body></html>

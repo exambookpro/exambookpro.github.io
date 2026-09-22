@@ -31,6 +31,17 @@ function show(f,b){
 
 const SUPABASE_URL="https://abgigsjhdvsqehgdhbym.supabase.co",SUPABASE_KEY="sb_publishable_GGcJmjwLXRrYsX8-sYph_g_Gt-0riU_",sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let class10Data={Chemistry:[],Biology:[],Physics:[]};
+const CLASS10_CATALOG={
+ Chemistry:[
+  'Chapter 1: Chemical Reactions and Equations','Chapter 2: Acids, Bases and Salts','Chapter 3: Metals and Non-metals','Chapter 4: Carbon and its Compounds','Chapter 5: Periodic Classification of Elements'
+ ],
+ Biology:[
+  'Chapter 1: Life Processes','Chapter 2: Control and Coordination','Chapter 3: How do Organisms Reproduce?','Chapter 4: Heredity and Evolution','Chapter 5: Our Environment','Chapter 6: Management of Natural Resources'
+ ],
+ Physics:[
+  'Chapter 1: Light – Reflection and Refraction','Chapter 2: The Human Eye and the Colourful World','Chapter 3: Electricity','Chapter 4: Magnetic Effects of Electric Current','Chapter 5: Sources of Energy'
+ ]
+};
 let class10Subject=null,class10Chapter=null;
 
 function chapterNumber(title){
@@ -56,32 +67,31 @@ function class10Back(){
 function renderClass10Subjects(){
  class10Subject=null;class10Chapter=null;
  const box=document.getElementById('dbGroups');
- box.innerHTML='<section class="group"><div class="navline"><button class="backbtn" onclick="location.href=\'index.html\'">← Home</button><span>Class 10 Bihar Special</span></div><h2>📚 1. Subject चुनें</h2><p class="muted">पहले subject चुनें। उसके बाद उसी subject के सभी chapters number-wise दिखेंगे।</p><div class="grid subject-grid">'+['Chemistry','Biology','Physics'].map((sub,i)=>{const n=class10Data[sub].length;return '<button class="subject-card" onclick="openClass10Subject(\''+sub+'\')"><div class="subject-no">'+(i+1)+'</div><div class="subject-icon">'+subjectIcon(sub)+'</div><div class="subject-title">'+subjectName(sub)+'</div><div class="subject-meta">'+n+' Chapters</div><span class="view-btn">View Chapters →</span></button>'}).join('')+'</div></section>';
+ box.innerHTML='<section class="group"><div class="navline"><button class="backbtn" onclick="location.href=\'index.html\'">← Home</button><span>Class 10 Bihar Special</span></div><h2>📚 1. Subject चुनें</h2><p class="muted">पहले subject चुनें। उसके बाद उसी subject के सभी chapters number-wise दिखेंगे।</p><div class="grid subject-grid">'+['Chemistry','Biology','Physics'].map((sub,i)=>'<button class="subject-card" onclick="openClass10Subject(\''+sub+'\')"><div class="subject-no">'+(i+1)+'</div><div class="subject-icon">'+subjectIcon(sub)+'</div><div class="subject-title">'+subjectName(sub)+'</div><div class="subject-meta">'+CLASS10_CATALOG[sub].length+' Chapters</div><span class="view-btn">View Chapters →</span></button>').join('')+'</div></section>';
 }
 function openClass10Subject(sub){class10Subject=sub;class10Chapter=null;renderClass10ChapterList(sub)}
 function renderClass10ChapterList(sub){
  const box=document.getElementById('dbGroups');
- const chapters=[...new Map(class10Data[sub].map(t=>[chapterLabel(t.title),t])).values()].sort((a,b)=>chapterNumber(a.title)-chapterNumber(b.title));
- box.innerHTML='<section class="group"><div class="navline"><button class="backbtn" onclick="class10Back()">← Subjects</button><span>'+subjectIcon(sub)+' '+subjectName(sub)+'</span></div><h2>📖 2. '+subjectName(sub)+' — Chapters</h2><p class="muted">जिस chapter की तैयारी करनी है, उस पर click करें।</p><div class="grid">'+chapters.map((t,i)=>{const label=chapterLabel(t.title);const count=class10Data[sub].filter(x=>chapterLabel(x.title)===label&&x.qcount>0).length;return '<button class="chapter-card" onclick="openClass10Chapter(\''+sub+'\',\''+label.replace(/'/g,"\\\\'")+'\')"><div class="chapter-no">'+(i+1)+'</div><div><div class="chapter-title">'+esc(label)+'</div><div class="chapter-meta">'+count+' Test'+(count===1?'':'s')+' available</div></div><span>→</span></button>'}).join('')+'</div></section>';
+ const chapters=CLASS10_CATALOG[sub];
+ box.innerHTML='<section class="group"><div class="navline"><button class="backbtn" onclick="class10Back()">← Subjects</button><span>'+subjectIcon(sub)+' '+subjectName(sub)+'</span></div><h2>📖 2. '+subjectName(sub)+' — Chapters</h2><p class="muted">जिस chapter की तैयारी करनी है, उस पर click करें।</p><div class="grid">'+chapters.map((label,i)=>'<button class="chapter-card" onclick="openClass10Chapter(\''+sub+'\',\''+label.replace(/'/g,"\\\\'")+'\')"><div class="chapter-no">'+(i+1)+'</div><div><div class="chapter-title">'+esc(label)+'</div><div class="chapter-meta">Test list देखने के लिए click करें</div></div><span>→</span></button>').join('')+'</div></section>';
 }
 function openClass10Chapter(sub,label){class10Subject=sub;class10Chapter=label;renderClass10Tests(sub,label)}
-function renderClass10Tests(sub,label){
+async function renderClass10Tests(sub,label){
  const box=document.getElementById('dbGroups');
- const tests=class10Data[sub].filter(t=>chapterLabel(t.title)===label&&t.qcount>0).sort((a,b)=>testNumber(a.title)-testNumber(b.title));
- box.innerHTML='<section class="group"><div class="navline"><button class="backbtn" onclick="class10Back()">← Chapters</button><span>'+subjectIcon(sub)+' '+subjectName(sub)+'</span></div><h2>📝 3. '+esc(label)+' — Tests</h2><p class="muted">Test number-wise practice. Har available test ko alag attempt kiya ja sakta hai.</p><div class="grid">'+(tests.length?tests.map(t=>{const tn=testNumber(t.title);return '<article class="card test-card"><div class="test-badge">TEST '+tn+'</div><h3>'+esc(t.title.replace(/.*—\s*/,'').replace(/\s*—\s*Test\s*\d+.*$/i,''))+' — Test '+tn+'</h3><div class="meta">'+t.qcount+' Questions • '+(t.duration_minutes||30)+' Minutes<br>+'+(t.marks_per_correct??1)+' / −'+(t.negative_per_wrong??0)+'</div><a class="start" href="verified-test.html?test='+t.id+'">Start Test '+tn+' →</a></article>'}).join(''):'<div class="note">Is chapter ka next test abhi prepare ho raha hai.</div>')+'</div></section>';
+ box.innerHTML='<section class="group"><div class="navline"><button class="backbtn" onclick="class10Back()">← Chapters</button><span>'+subjectIcon(sub)+' '+subjectName(sub)+'</span></div><h2>📝 3. '+esc(label)+' — Tests</h2><div class="note">Tests verify किए जा रहे हैं…</div></section>';
+ const {data,error}=await sb.from('tests').select('id,title,exam,description,duration_minutes,marks_per_correct,negative_per_wrong').eq('exam','Bihar Board Class 10 Science — '+sub).ilike('title','%'+label+'%').order('id');
+ if(error||!data){box.querySelector('.note').textContent='Tests load नहीं हो पाए। Please refresh करके फिर देखें।';return}
+ const tests=await Promise.all(data.map(async t=>{
+   const r=await sb.from('questions').select('id',{count:'exact',head:true}).eq('test_id',t.id);
+   t.qcount=r.count||0; return t;
+ }));
+ const available=tests.filter(t=>t.qcount>0).sort((a,b)=>testNumber(a.title)-testNumber(b.title));
+ box.innerHTML='<section class="group"><div class="navline"><button class="backbtn" onclick="class10Back()">← Chapters</button><span>'+subjectIcon(sub)+' '+subjectName(sub)+'</span></div><h2>📝 3. '+esc(label)+' — Tests</h2><p class="muted">Available tests number-wise. हर test अलग attempt किया जा सकता है।</p><div class="grid">'+(available.length?available.map(t=>{const tn=testNumber(t.title);return '<article class="card test-card"><div class="test-badge">TEST '+tn+'</div><h3>Test '+tn+'</h3><div class="meta">'+t.qcount+' Questions • '+(t.duration_minutes||30)+' Minutes<br>+'+(t.marks_per_correct??1)+' / −'+(t.negative_per_wrong??0)+'</div><a class="start" href="verified-test.html?test='+t.id+'">Start Test '+tn+' →</a></article>'}).join(''):'<div class="note">Is chapter ka verified test abhi available नहीं है।</div>')+'</div></section>';
 }
-
 async function loadDatabaseTests(){
- const box=document.getElementById('dbGroups');
- const [{data,error},{data:qdata,error:qerror}]=await Promise.all([
-   sb.from('tests').select('id,title,exam,description,duration_minutes,marks_per_correct,negative_per_wrong').like('exam','Bihar Board Class 10 Science%').order('id'),
-   sb.from('questions').select('id,test_id').order('id')
- ]);
- if(error||qerror||!data||!qdata){box.innerHTML='<section class="group"><h2>📚 Class 10 Bihar Special</h2><div class="note">Class 10 tests load नहीं हो पाए।</div></section>';return}
- const counts={};qdata.forEach(q=>counts[q.test_id]=(counts[q.test_id]||0)+1);
- class10Data={Chemistry:[],Biology:[],Physics:[]};
- data.forEach(t=>{const m=String(t.exam||'').match(/—\s*(Chemistry|Biology|Physics)$/);if(m){t.qcount=counts[t.id]||0;class10Data[m[1]].push(t)}});
  renderClass10Subjects();
+ const {data,error}=await sb.from('tests').select('id,title,exam,description,duration_minutes,marks_per_correct,negative_per_wrong').like('exam','Bihar Board Class 10 Science%').order('id');
+ if(!error&&data){class10Data={Chemistry:[],Biology:[],Physics:[]};data.forEach(t=>{const m=String(t.exam||'').match(/—\s*(Chemistry|Biology|Physics)$/);if(m)class10Data[m[1]].push(t);});}
 }
 loadDatabaseTests();
 </script></body></html>

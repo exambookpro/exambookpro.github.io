@@ -80,11 +80,12 @@ async function saveCloud(r){
     return !out.error;
   }catch(e){return false}
 }
-function saveResult(){
+function saveResult(attempt){
   if(done)return;
-  done=true;
+  attempt=attempt||0;
   var r=parseResult();
-  if(!r)return;
+  if(!r){if(attempt<10)setTimeout(function(){saveResult(attempt+1)},300);return}
+  done=true;
   saveLocal(r);
   saveCloud(r);
 }

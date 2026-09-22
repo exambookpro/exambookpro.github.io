@@ -13,7 +13,23 @@ const SUPABASE_URL="https://abgigsjhdvsqehgdhbym.supabase.co",SUPABASE_KEY="sb_p
 let lang='hi',tests=[],qs=[],answers={},i=0,startedAt=0,timer=null,submitted=false,requestedTestId=new URLSearchParams(location.search).get('test'),sectionMode=false,sectionStartedAt=0,sectionStart=0,sectionEnd=0;
 const $=x=>document.getElementById(x);
 const esc=s=>String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
-function setLang(x){lang=x;$('hi').classList.toggle('active',x==='hi');$('en').classList.toggle('active',x==='en');if(qs.length)render()}
+async function setLang(x){
+  lang=x;
+  $('hi').classList.toggle('active',x==='hi');
+  $('en').classList.toggle('active',x==='en');
+  if(!qs.length){return}
+  render();
+  if(x==='en' && qs.some(q=>!q.question_en)){
+    try{
+      const testId=Number($('tests').value);
+      if(!testId)return;
+      const {data,error}=await sb.functions.invoke('translate-test-text',{body:{test_id:testId}});
+      if(error)throw error;
+      const r=await sb.from('questions').select('id,question,question_hi,question_en,option_a,option_a_hi,option_a_en,option_b,option_b_hi,option_b_en,option_c,option_c_hi,option_c_en,option_d,option_d_hi,option_d_en,explanation,explanation_hi,explanation_en,section').eq('test_id',testId).order('id');
+      if(!r.error && r.data?.length){qs=r.data;render()}
+    }catch(e){console.warn('English translation unavailable',e)}
+  }
+}
 function text(q,base,side){return q[''+base+'_'+lang]||q[base+'_'+side]||q[base]||''}
 
 async function loadTests(){const {data,error}=await sb.from('tests').select('id,title,exam,duration_minutes,marks_per_correct,negative_per_wrong').order('created_at',{ascending:false});if(error)return $('tests').innerHTML='<option>Error loading tests</option>';tests=data||[];$('tests').innerHTML=tests.length?'<option value="">Select a test</option>'+tests.map(t=>'<option value="'+t.id+'">'+esc(t.exam+' — '+t.title)+'</option>').join(''):'<option value="">No verified tests yet</option>';if(requestedTestId&&tests.some(x=>String(x.id)===String(requestedTestId))){$('tests').value=String(requestedTestId);}}

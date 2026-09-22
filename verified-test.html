@@ -15,7 +15,8 @@ const $=x=>document.getElementById(x);
 const esc=s=>String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
 if(!window.ExamBookVerifiedResults){
   window.ExamBookVerifiedResults={submit:async function(testId,answers,timeUsedSeconds){
-    const session=await sb.auth.getSession();
+    let session=await sb.auth.getSession();
+    if(session.error||!session.data||!session.data.session){session=await sb.auth.refreshSession();}
     if(session.error||!session.data||!session.data.session) throw new Error('Login session missing or expired');
     const token=session.data.session.access_token;
     const res=await fetch(SUPABASE_URL+'/functions/v1/submit-verified-result',{

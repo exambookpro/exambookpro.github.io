@@ -13,6 +13,21 @@ const SUPABASE_URL="https://abgigsjhdvsqehgdhbym.supabase.co",SUPABASE_KEY="sb_p
 let lang='hi',tests=[],qs=[],answers={},i=0,startedAt=0,timer=null,submitted=false,requestedTestId=new URLSearchParams(location.search).get('test'),sectionMode=false,sectionStartedAt=0,sectionStart=0,sectionEnd=0;
 const $=x=>document.getElementById(x);
 const esc=s=>String(s??'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]));
+if(!window.ExamBookVerifiedResults){
+  window.ExamBookVerifiedResults={submit:async function(testId,answers,timeUsedSeconds){
+    const session=await sb.auth.getSession();
+    if(session.error||!session.data||!session.data.session) throw new Error('Login session missing or expired');
+    const token=session.data.session.access_token;
+    const res=await fetch(SUPABASE_URL+'/functions/v1/submit-verified-result',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+token},
+      body:JSON.stringify({test_id:Number(testId),answers:answers||{},time_used_seconds:Number(timeUsedSeconds)||0})
+    });
+    let payload=null;try{payload=await res.json()}catch(e){}
+    if(!res.ok||!payload||!payload.ok) throw new Error((payload&&payload.error)||('Result submission failed (HTTP '+res.status+')'));
+    return Object.assign({},payload.result,{review:Array.isArray(payload.review)?payload.review:[],section_performance:Array.isArray(payload.section_performance)?payload.section_performance:[],scoring:payload.scoring||{marks_per_correct:1,negative_per_wrong:0,max_score:payload.result.total_questions}});
+  }};
+}
 async function setLang(x){
   lang=x;
   $('hi').classList.toggle('active',x==='hi');

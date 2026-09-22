@@ -34,16 +34,16 @@ let class10Data={Chemistry:[],Biology:[],Physics:[]};
 let class10Subject=null,class10Chapter=null;
 
 function chapterNumber(title){
- const m=String(title||'').match(/Chapter\\s*(\\d+)/i);
+ const m=String(title||'').match(/Chapter\s*(\d+)/i);
  return m?parseInt(m[1],10):999;
 }
 function chapterLabel(title){
  const s=String(title||'');
- const m=s.match(/—\\s*(Chapter\\s*\\d+:[^—]+?)\\s*—\\s*Test\\s*\\d+/i);
+ const m=s.match(/—\s*(Chapter\s*\d+:[^—]+?)\s*—\s*Test\s*\d+/i);
  return m?m[1].trim():s;
 }
 function testNumber(title){
- const m=String(title||'').match(/Test\\s*(\\d+)/i);
+ const m=String(title||'').match(/Test\s*(\d+)/i);
  return m?parseInt(m[1],10):999;
 }
 function subjectIcon(sub){return sub==='Biology'?'🧬':sub==='Chemistry'?'⚗️':'⚡'}
@@ -68,7 +68,7 @@ function openClass10Chapter(sub,label){class10Subject=sub;class10Chapter=label;r
 function renderClass10Tests(sub,label){
  const box=document.getElementById('dbGroups');
  const tests=class10Data[sub].filter(t=>chapterLabel(t.title)===label&&t.qcount>0).sort((a,b)=>testNumber(a.title)-testNumber(b.title));
- box.innerHTML='<section class="group"><div class="navline"><button class="backbtn" onclick="class10Back()">← Chapters</button><span>'+subjectIcon(sub)+' '+subjectName(sub)+'</span></div><h2>📝 3. '+esc(label)+' — Tests</h2><p class="muted">Test number-wise practice. Har available test ko alag attempt kiya ja sakta hai.</p><div class="grid">'+(tests.length?tests.map(t=>{const tn=testNumber(t.title);return '<article class="card test-card"><div class="test-badge">TEST '+tn+'</div><h3>'+esc(t.title.replace(/.*—\\s*/,'').replace(/\\s*—\\s*Test\\s*\\d+.*$/i,''))+' — Test '+tn+'</h3><div class="meta">'+t.qcount+' Questions • '+(t.duration_minutes||30)+' Minutes<br>+'+(t.marks_per_correct??1)+' / −'+(t.negative_per_wrong??0)+'</div><a class="start" href="verified-test.html?test='+t.id+'">Start Test '+tn+' →</a></article>'}).join(''):'<div class="note">Is chapter ka next test abhi prepare ho raha hai.</div>')+'</div></section>';
+ box.innerHTML='<section class="group"><div class="navline"><button class="backbtn" onclick="class10Back()">← Chapters</button><span>'+subjectIcon(sub)+' '+subjectName(sub)+'</span></div><h2>📝 3. '+esc(label)+' — Tests</h2><p class="muted">Test number-wise practice. Har available test ko alag attempt kiya ja sakta hai.</p><div class="grid">'+(tests.length?tests.map(t=>{const tn=testNumber(t.title);return '<article class="card test-card"><div class="test-badge">TEST '+tn+'</div><h3>'+esc(t.title.replace(/.*—\s*/,'').replace(/\s*—\s*Test\s*\d+.*$/i,''))+' — Test '+tn+'</h3><div class="meta">'+t.qcount+' Questions • '+(t.duration_minutes||30)+' Minutes<br>+'+(t.marks_per_correct??1)+' / −'+(t.negative_per_wrong??0)+'</div><a class="start" href="verified-test.html?test='+t.id+'">Start Test '+tn+' →</a></article>'}).join(''):'<div class="note">Is chapter ka next test abhi prepare ho raha hai.</div>')+'</div></section>';
 }
 
 async function loadDatabaseTests(){
@@ -80,7 +80,7 @@ async function loadDatabaseTests(){
  if(error||qerror||!data||!qdata){box.innerHTML='<section class="group"><h2>📚 Class 10 Bihar Special</h2><div class="note">Class 10 tests load नहीं हो पाए।</div></section>';return}
  const counts={};qdata.forEach(q=>counts[q.test_id]=(counts[q.test_id]||0)+1);
  class10Data={Chemistry:[],Biology:[],Physics:[]};
- data.forEach(t=>{const m=String(t.exam||'').match(/—\\s*(Chemistry|Biology|Physics)$/);if(m){t.qcount=counts[t.id]||0;class10Data[m[1]].push(t)}});
+ data.forEach(t=>{const m=String(t.exam||'').match(/—\s*(Chemistry|Biology|Physics)$/);if(m){t.qcount=counts[t.id]||0;class10Data[m[1]].push(t)}});
  renderClass10Subjects();
 }
 loadDatabaseTests();

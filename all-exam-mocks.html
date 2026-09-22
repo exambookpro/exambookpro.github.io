@@ -1,5 +1,5 @@
 <!doctype html><html lang="hi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>ExamBook Pro — All Exam Mock Tests</title><style>*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f4f7fb;color:#172033}.top{position:sticky;top:0;z-index:20;background:#fff;border-bottom:1px solid #e5e7eb;padding:13px 18px}.bar{max-width:1450px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:15px}.brand{font-size:22px;font-weight:900}.brand span{color:#2563eb}.home{color:#2563eb;text-decoration:none;font-weight:800}.wrap{max-width:1450px;margin:auto;padding:25px 18px}.hero{background:linear-gradient(110deg,#eef2ff,#dbeafe);border:1px solid #dbe3ef;border-radius:16px;padding:26px;margin-bottom:20px}.hero h1{margin:0 0 8px}.hero p{margin:6px 0;color:#475569}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:18px 0}.filter{border:1px solid #2563eb;background:#fff;color:#1d4ed8;border-radius:9px;padding:9px 13px;font-weight:800;cursor:pointer}.filter.active{background:#2563eb;color:#fff}.group{margin:25px 0}.group h2{font-size:21px;margin:0 0 12px}.grid{display:grid;grid-template-columns:repeat(5,minmax(190px,1fr));gap:14px}.card{background:#fff;border:1px solid #dbe3ef;border-radius:12px;padding:17px;box-shadow:0 3px 12px #0000000a}.icon{font-size:25px}.card h3{font-size:16px;margin:8px 0}.meta{font-size:12px;color:#64748b;line-height:1.55}.start{display:block;text-align:center;background:#2563eb;color:#fff;text-decoration:none;border-radius:8px;padding:10px;margin-top:13px;font-weight:800}.note{background:#fff7ed;border:1px solid #fed7aa;padding:12px;border-radius:10px;color:#9a3412;font-size:13px;margin:15px 0}@media(max-width:1100px){.grid{grid-template-columns:repeat(3,minmax(190px,1fr))}}@media(max-width:700px){.grid{grid-template-columns:repeat(2,minmax(150px,1fr))}}@media(max-width:480px){.grid{grid-template-columns:1fr}}
-</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head><body><header class="top"><div class="bar"><div class="brand">📚 <span>ExamBook</span> Pro</div><a class="home" href="index.html">← Home</a></div></header><main class="wrap"><section class="hero"><h1>All Competitive Exam Mock Tests 🎯</h1><p><b>हर Mock Test में 30 Questions • English + Hindi • Previous / Next • Question Palette • Result</b></p><p>Railway, SSC, Bihar Police और BPSC के लिए अलग-अलग exam-wise series.</p><div class="note">नोट: Railway में “CHSL” नाम का अलग RRB exam नहीं है। इसलिए Railway के लिए NTPC और Group D अलग रखे गए हैं, जबकि CHSL को SSC के अंतर्गत रखा गया है। Exam patterns को संबंधित official exam information के अनुसार रखा गया है।</div></section><div class="filters" id="filters"></div><div id="groups"></div><div id="dbGroups"></div></main><script>
+.muted{color:#64748b;font-size:13px;line-height:1.6}.navline{display:flex;align-items:center;gap:12px;margin-bottom:14px;color:#475569;font-weight:800}.backbtn{border:1px solid #cbd5e1;background:#fff;color:#1d4ed8;border-radius:9px;padding:8px 12px;font-weight:800;cursor:pointer}.subject-grid{grid-template-columns:repeat(3,minmax(220px,1fr))}.subject-card,.chapter-card{border:1px solid #dbe3ef;background:#fff;border-radius:14px;cursor:pointer;text-align:left;box-shadow:0 4px 14px #0000000a}.subject-card{padding:24px;position:relative;overflow:hidden}.subject-card:hover,.chapter-card:hover{border-color:#2563eb;transform:translateY(-1px)}.subject-no,.chapter-no{width:32px;height:32px;border-radius:50%;background:#eff6ff;color:#1d4ed8;display:flex;align-items:center;justify-content:center;font-weight:900;margin-bottom:12px}.subject-icon{font-size:34px}.subject-title{font-size:22px;font-weight:900;margin-top:8px}.subject-meta,.chapter-meta{color:#64748b;font-size:13px;margin-top:5px}.view-btn{display:inline-block;margin-top:16px;color:#2563eb;font-weight:900}.chapter-card{padding:17px;display:flex;align-items:center;gap:14px;width:100%;min-height:82px}.chapter-no{flex:0 0 32px;margin:0}.chapter-title{font-weight:900;color:#172033}.chapter-card>span{margin-left:auto;font-size:20px;color:#2563eb}.test-card{position:relative}.test-badge{display:inline-block;background:#eff6ff;color:#1d4ed8;border-radius:7px;padding:5px 8px;font-size:11px;font-weight:900;letter-spacing:.4px}.test-card h3{margin-top:10px}@media(max-width:700px){.subject-grid{grid-template-columns:1fr}.subject-card{padding:20px}.navline{font-size:13px}}</style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script></head><body><header class="top"><div class="bar"><div class="brand">📚 <span>ExamBook</span> Pro</div><a class="home" href="index.html">← Home</a></div></header><main class="wrap"><section class="hero"><h1>All Competitive Exam Mock Tests 🎯</h1><p><b>हर Mock Test में 30 Questions • English + Hindi • Previous / Next • Question Palette • Result</b></p><p>Railway, SSC, Bihar Police और BPSC के लिए अलग-अलग exam-wise series.</p><div class="note">नोट: Railway में “CHSL” नाम का अलग RRB exam नहीं है। इसलिए Railway के लिए NTPC और Group D अलग रखे गए हैं, जबकि CHSL को SSC के अंतर्गत रखा गया है। Exam patterns को संबंधित official exam information के अनुसार रखा गया है।</div></section><div class="filters" id="filters"></div><div id="groups"></div><div id="dbGroups"></div></main><script>
 const SERIES=[
 ['railway-ntpc','🚆','RRB NTPC','Railway • NTPC CBT','Maths • Reasoning • General Awareness • Science'],
 ['railway-groupd','🚆','RRB Group D','Railway • Group D','Maths • Reasoning • General Science • General Awareness'],
@@ -14,23 +14,74 @@ const filters=[['all','All Exams'],...SERIES.map(x=>[x[0],x[2]])];document.getEl
 function esc(v){return String(v??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));}
 function card(s,n){return `<article class="card" data-series="${s[0]}"><div class="icon">${s[1]}</div><h3>${s[2]} — Mock Test ${n}</h3><div class="meta">30 Questions • 30 Marks<br>${s[4]}<br>English + Hindi</div><a class="start" href="exam-mock.html?exam=${encodeURIComponent(s[0])}&mock=${n}">Start Test</a></article>`}
 function render(filter='all'){document.getElementById('groups').innerHTML=SERIES.filter(s=>filter==='all'||s[0]===filter).map(s=>`<section class="group"><h2>${s[1]} ${s[2]} <span style="font-size:12px;color:#64748b">• 10 Mock Tests</span></h2><div class="grid">${Array.from({length:10},(_,i)=>card(s,i+1)).join('')}</div></section>`).join('')}
-const params=new URLSearchParams(location.search);const class10=params.get('category')==='class10';if(class10){document.querySelector('.hero h1').textContent='Class 10 Bihar Special — Science 📚';document.querySelector('.hero p').textContent='सिर्फ Bihar Board Class 10 Science के chapter-wise tests: Chemistry • Biology • Physics';document.querySelector('.note').textContent='Class 10 Special view में केवल Science के chapter-wise tests दिखाए जा रहे हैं। अन्य competitive exams यहाँ नहीं दिखेंगे।';document.getElementById('filters').style.display='none';document.getElementById('groups').style.display='none';}else{render();}
-function show(f,b){document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');render(f);document.getElementById('dbGroups').style.display=f==='all'?'block':'none'}
+const params=new URLSearchParams(location.search);
+const class10=params.get('category')==='class10';
+if(class10){
+ document.querySelector('.hero h1').textContent='Class 10 Bihar Special — Science 📚';
+ document.querySelector('.hero p').textContent='Bihar Board Class 10 Science • Subject → Chapter → Test';
+ document.querySelector('.note').textContent='Clean 3-step view: पहले Subject चुनें, फिर Chapter, फिर Test Number. केवल Class 10 Science tests दिखेंगे।';
+ document.getElementById('filters').style.display='none';
+ document.getElementById('groups').style.display='none';
+}else{render();}
+
+function show(f,b){
+ document.querySelectorAll('.filter').forEach(x=>x.classList.remove('active'));
+ b.classList.add('active');render(f);document.getElementById('dbGroups').style.display=f==='all'?'block':'none'
+}
+
 const SUPABASE_URL="https://abgigsjhdvsqehgdhbym.supabase.co",SUPABASE_KEY="sb_publishable_GGcJmjwLXRrYsX8-sYph_g_Gt-0riU_",sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let class10Data={Chemistry:[],Biology:[],Physics:[]};
+let class10Subject=null,class10Chapter=null;
+
+function chapterNumber(title){
+ const m=String(title||'').match(/Chapter\\s*(\\d+)/i);
+ return m?parseInt(m[1],10):999;
+}
+function chapterLabel(title){
+ const s=String(title||'');
+ const m=s.match(/—\\s*(Chapter\\s*\\d+:[^—]+?)\\s*—\\s*Test\\s*\\d+/i);
+ return m?m[1].trim():s;
+}
+function testNumber(title){
+ const m=String(title||'').match(/Test\\s*(\\d+)/i);
+ return m?parseInt(m[1],10):999;
+}
+function subjectIcon(sub){return sub==='Biology'?'🧬':sub==='Chemistry'?'⚗️':'⚡'}
+function subjectName(sub){return sub==='Chemistry'?'Chemistry':sub==='Biology'?'Biology':'Physics'}
+
+function class10Back(){
+ if(class10Chapter){class10Chapter=null;renderClass10ChapterList(class10Subject);return}
+ if(class10Subject){class10Subject=null;renderClass10Subjects();return}
+}
+function renderClass10Subjects(){
+ class10Subject=null;class10Chapter=null;
+ const box=document.getElementById('dbGroups');
+ box.innerHTML='<section class="group"><div class="navline"><button class="backbtn" onclick="location.href=\'index.html\'">← Home</button><span>Class 10 Bihar Special</span></div><h2>📚 1. Subject चुनें</h2><p class="muted">पहले subject चुनें। उसके बाद उसी subject के सभी chapters number-wise दिखेंगे।</p><div class="grid subject-grid">'+['Chemistry','Biology','Physics'].map((sub,i)=>{const n=class10Data[sub].length;return '<button class="subject-card" onclick="openClass10Subject(\''+sub+'\')"><div class="subject-no">'+(i+1)+'</div><div class="subject-icon">'+subjectIcon(sub)+'</div><div class="subject-title">'+subjectName(sub)+'</div><div class="subject-meta">'+n+' Chapters</div><span class="view-btn">View Chapters →</span></button>'}).join('')+'</div></section>';
+}
+function openClass10Subject(sub){class10Subject=sub;class10Chapter=null;renderClass10ChapterList(sub)}
+function renderClass10ChapterList(sub){
+ const box=document.getElementById('dbGroups');
+ const chapters=[...new Map(class10Data[sub].map(t=>[chapterLabel(t.title),t])).values()].sort((a,b)=>chapterNumber(a.title)-chapterNumber(b.title));
+ box.innerHTML='<section class="group"><div class="navline"><button class="backbtn" onclick="class10Back()">← Subjects</button><span>'+subjectIcon(sub)+' '+subjectName(sub)+'</span></div><h2>📖 2. '+subjectName(sub)+' — Chapters</h2><p class="muted">जिस chapter की तैयारी करनी है, उस पर click करें।</p><div class="grid">'+chapters.map((t,i)=>{const label=chapterLabel(t.title);const count=class10Data[sub].filter(x=>chapterLabel(x.title)===label&&x.qcount>0).length;return '<button class="chapter-card" onclick="openClass10Chapter(\''+sub+'\',\''+label.replace(/'/g,"\\\\'")+'\')"><div class="chapter-no">'+(i+1)+'</div><div><div class="chapter-title">'+esc(label)+'</div><div class="chapter-meta">'+count+' Test'+(count===1?'':'s')+' available</div></div><span>→</span></button>'}).join('')+'</div></section>';
+}
+function openClass10Chapter(sub,label){class10Subject=sub;class10Chapter=label;renderClass10Tests(sub,label)}
+function renderClass10Tests(sub,label){
+ const box=document.getElementById('dbGroups');
+ const tests=class10Data[sub].filter(t=>chapterLabel(t.title)===label&&t.qcount>0).sort((a,b)=>testNumber(a.title)-testNumber(b.title));
+ box.innerHTML='<section class="group"><div class="navline"><button class="backbtn" onclick="class10Back()">← Chapters</button><span>'+subjectIcon(sub)+' '+subjectName(sub)+'</span></div><h2>📝 3. '+esc(label)+' — Tests</h2><p class="muted">Test number-wise practice. Har available test ko alag attempt kiya ja sakta hai.</p><div class="grid">'+(tests.length?tests.map(t=>{const tn=testNumber(t.title);return '<article class="card test-card"><div class="test-badge">TEST '+tn+'</div><h3>'+esc(t.title.replace(/.*—\\s*/,'').replace(/\\s*—\\s*Test\\s*\\d+.*$/i,''))+' — Test '+tn+'</h3><div class="meta">'+t.qcount+' Questions • '+(t.duration_minutes||30)+' Minutes<br>+'+(t.marks_per_correct??1)+' / −'+(t.negative_per_wrong??0)+'</div><a class="start" href="verified-test.html?test='+t.id+'">Start Test '+tn+' →</a></article>'}).join(''):'<div class="note">Is chapter ka next test abhi prepare ho raha hai.</div>')+'</div></section>';
+}
+
 async function loadDatabaseTests(){
  const box=document.getElementById('dbGroups');
- const {data,error}=await sb.from('tests').select('id,title,exam,description,duration_minutes,marks_per_correct,negative_per_wrong').like('exam','Bihar Board Class 10 Science%').order('id');
- if(error||!data){box.innerHTML='<section class="group"><h2>📚 Class 10 Bihar Special</h2><div class="note">Database tests load नहीं हो पाए।</div></section>';return}
- const order=['Chemistry','Biology','Physics'];
- const labels={Chemistry:'⚗️ Chemistry',Biology:'🧬 Biology',Physics:'⚡ Physics'};
- box.innerHTML='<section class="group"><h2>📚 Class 10 Bihar Special — Science</h2><p class="muted">Chemistry, Biology और Physics अलग-अलग हैं। हर chapter का Test 1 अभी 50 verified practice questions का है; आगे bank बढ़ने पर उसी chapter के Test 2, Test 3… अलग बनेंगे।</p>'+order.map(sub=>{
-   const arr=data.filter(t=>t.exam.endsWith('— '+sub));
-   if(!arr.length)return '';
-   return '<section class="group"><h2>'+labels[sub]+' <span style="font-size:12px;color:#64748b">• '+arr.length+' Chapters</span></h2><div class="grid">'+arr.map(t=>{
-     const icon=sub==='Biology'?'🧬':sub==='Chemistry'?'⚗️':'⚡';
-     return '<article class="card"><div class="icon">'+icon+'</div><h3>'+esc(t.title)+'</h3><div class="meta">50 Questions • '+(t.duration_minutes||30)+' Minutes<br>+'+(t.marks_per_correct??1)+' / −'+(t.negative_per_wrong??0)+'<br>'+esc(t.description||'Chapter-wise test')+'</div><a class="start" href="verified-test.html?test='+t.id+'">Start Test</a></article>';
-   }).join('')+'</div></section>';
- }).join('')+'</section>';
+ const [{data,error},{data:qdata,error:qerror}]=await Promise.all([
+   sb.from('tests').select('id,title,exam,description,duration_minutes,marks_per_correct,negative_per_wrong').like('exam','Bihar Board Class 10 Science%').order('id'),
+   sb.from('questions').select('id,test_id').order('id')
+ ]);
+ if(error||qerror||!data||!qdata){box.innerHTML='<section class="group"><h2>📚 Class 10 Bihar Special</h2><div class="note">Class 10 tests load नहीं हो पाए।</div></section>';return}
+ const counts={};qdata.forEach(q=>counts[q.test_id]=(counts[q.test_id]||0)+1);
+ class10Data={Chemistry:[],Biology:[],Physics:[]};
+ data.forEach(t=>{const m=String(t.exam||'').match(/—\\s*(Chemistry|Biology|Physics)$/);if(m){t.qcount=counts[t.id]||0;class10Data[m[1]].push(t)}});
+ renderClass10Subjects();
 }
 loadDatabaseTests();
 </script></body></html>

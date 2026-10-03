@@ -3,6 +3,7 @@
 </style></head><body><div id="app"></div><script>
 const SB_URL='https://abgigsjhdvsqehgdhbym.supabase.co',SB_KEY='sb_publishable_GGcJmjwLXRrYsX8-sYph_g_Gt-0riU_';
 const sb=supabase.createClient(SB_URL,SB_KEY);let session=null,profile=null,view='home',videos=[],history=[],leader=[],adminVideos=[];
+const orderTypes=[['discover','Discover / Browse'],['views','Views'],['likes','Likes'],['comments','Comments'],['watchtime','Watch Time'],['subscribers','Subscribers'],['shares','Shares']];
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const platform=url=>{try{let h=new URL(url).hostname.replace(/^www\./,'');return h.includes('youtube.com')||h.includes('youtu.be')?'YouTube':h.includes('instagram.com')?'Instagram':h.includes('facebook.com')||h.includes('fb.watch')?'Facebook':null}catch{return null}};
 function toast(t,err=false){let e=document.getElementById('toast');e.className='msg '+(err?'err':'');e.textContent=t;e.classList.remove('hide');setTimeout(()=>e.classList.add('hide'),3000)}
